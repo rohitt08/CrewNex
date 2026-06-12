@@ -26,3 +26,4 @@ services:
 networks:
   fullstack-net:
     driver: bridge
+
