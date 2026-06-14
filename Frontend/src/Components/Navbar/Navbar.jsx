@@ -171,24 +171,11 @@ const Navbar = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className="relative px-4 py-2 rounded-xl text-sm font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-apple-blue"
+                  className={`relative px-4 py-2 rounded-xl text-sm font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-apple-blue ${isActive ? "bg-white/10 text-white" : "text-apple-text-secondary hover:text-white hover:bg-white/5"}`}
                 >
-                  <span
-                    className={`relative z-10 ${isActive ? "text-white" : "text-apple-text-secondary hover:text-white"}`}
-                  >
+                  <span className="relative z-10">
                     {item.label}
                   </span>
-                  {isActive && (
-                    <motion.div
-                      layoutId="nav-indicator"
-                      className="absolute inset-0 bg-white/10 rounded-xl"
-                      transition={{
-                        type: "spring",
-                        bounce: 0.2,
-                        duration: 0.6,
-                      }}
-                    />
-                  )}
                 </Link>
               );
             })}
