@@ -7,10 +7,10 @@
   /* Core Apple Colors */
   --color-apple-bg: #0a0a0a;
   --color-apple-surface: #111111;
-  --color-apple-glass: rgba(255, 255, 255, 0.06);
-  --color-apple-glass-border: rgba(255, 255, 255, 0.12);
+  --color-apple-glass: rgba(255, 255, 255, 0.15);
+  --color-apple-glass-border: rgba(255, 255, 255, 0.20);
   --color-apple-text-primary: #ffffff;
-  --color-apple-text-secondary: #a1a1aa;
+  --color-apple-text-secondary: #d4d4d8; /* Lightened from #a1a1aa for better contrast */
 
   /* Accents */
   --color-apple-blue: #3b82f6;
@@ -41,7 +41,7 @@
   }
 
   .liquid-glass-card {
-    @apply bg-apple-surface/60 backdrop-blur-md border border-apple-glass-border shadow-[0_4px_24px_rgba(0,0,0,0.1)] hover:bg-apple-surface/80 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)] hover:border-white/20 transition-all duration-300;
+    @apply bg-apple-surface/85 backdrop-blur-md border border-apple-glass-border shadow-[0_4px_24px_rgba(0,0,0,0.1)] hover:bg-apple-surface/95 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)] hover:border-white/30 transition-all duration-300;
     transform: translateZ(0);
     will-change: transform, box-shadow, border-color;
     backface-visibility: hidden;

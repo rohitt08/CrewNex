@@ -260,7 +260,7 @@ const CreateProject = () => {
                     value={form.title}
                     onChange={(e) => setField("title", e.target.value)}
                     placeholder="e.g. Next-Gen AI Study Planner"
-                    className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-base text-white font-semibold outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/30 shadow-sm"
+                    className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-base text-white font-semibold outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/60 shadow-sm"
                   />
                 </div>
 
@@ -274,7 +274,7 @@ const CreateProject = () => {
                     value={form.description}
                     onChange={(e) => setField("description", e.target.value)}
                     placeholder="Describe the project, its goals, and what you're building in detail..."
-                    className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-base text-white font-medium outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/30 resize-none shadow-sm"
+                    className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-base text-white font-medium outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/60 resize-none shadow-sm"
                   />
                 </div>
 
@@ -299,7 +299,7 @@ const CreateProject = () => {
                       value={form.duration}
                       onChange={(e) => setField("duration", e.target.value)}
                       placeholder="e.g. 3 months"
-                      className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-semibold text-white outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/30 shadow-sm"
+                      className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-semibold text-white outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/60 shadow-sm"
                     />
                   </div>
                 </div>
@@ -387,7 +387,7 @@ const CreateProject = () => {
                         <button
                           type="button"
                           onClick={() => removeRole(idx)}
-                          className="absolute top-4 right-4 p-2 text-white/50 hover:text-white hover:bg-apple-error/80 rounded-lg transition-colors bg-white/5 border border-white/10 z-10"
+                          className="absolute top-4 right-4 p-2 text-white/80 hover:text-white hover:bg-apple-error/80 rounded-lg transition-colors bg-white/5 border border-white/10 z-10"
                           title="Remove role"
                         >
                           <X className="w-4 h-4" />
@@ -407,7 +407,7 @@ const CreateProject = () => {
                               updateRole(idx, "roleName", e.target.value)
                             }
                             placeholder="e.g. Frontend Developer"
-                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/30"
+                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/60"
                           />
                         </div>
                         <div>
@@ -442,7 +442,7 @@ const CreateProject = () => {
                             updateRole(idx, "description", e.target.value)
                           }
                           placeholder="Briefly describe what this person will do..."
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/30"
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:border-apple-blue focus:ring-1 focus:ring-apple-blue transition-all placeholder-white/60"
                         />
                       </div>
 
@@ -473,7 +473,7 @@ const CreateProject = () => {
                             ))}
                           </AnimatePresence>
                           {role.skillsRequired.length === 0 && (
-                            <span className="text-sm font-medium text-white/30 italic">
+                            <span className="text-sm font-medium text-white/60 italic">
                               No skills added yet
                             </span>
                           )}
@@ -492,7 +492,7 @@ const CreateProject = () => {
                               }
                             }}
                             placeholder="Type a skill and hit Enter or Add"
-                            className="w-full flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-white outline-none focus:border-apple-blue transition-all placeholder-white/30"
+                            className="w-full flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-white outline-none focus:border-apple-blue transition-all placeholder-white/60"
                           />
                           <motion.button
                             whileHover={{ scale: 1.02 }}

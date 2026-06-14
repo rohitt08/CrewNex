@@ -315,7 +315,7 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
                   className={`w-full text-sm px-4 py-2.5 font-bold rounded-xl transition-all shadow-sm flex items-center justify-center ${
                     app.assessmentScore >= 60
                       ? "bg-apple-btn text-white"
-                      : "bg-white/5 text-white/50 cursor-not-allowed border border-white/10"
+                      : "bg-white/5 text-white/80 cursor-not-allowed border border-white/10"
                   }`}
                   title={
                     app.assessmentScore < 60
@@ -605,7 +605,7 @@ const ManageProject = () => {
                 >
                   {t.label}
                   <span
-                    className={`text-[11px] font-extrabold px-2 py-0.5 rounded-lg ${activeTab === t.id ? "bg-white/20 text-white" : "bg-white/10 text-white/50"}`}
+                    className={`text-[11px] font-extrabold px-2 py-0.5 rounded-lg ${activeTab === t.id ? "bg-white/20 text-white" : "bg-white/10 text-white/80"}`}
                   >
                     {count || 0}
                   </span>
@@ -631,7 +631,7 @@ const ManageProject = () => {
                   className="liquid-glass-card rounded-[2rem] p-16 text-center shadow-sm max-w-2xl mx-auto"
                 >
                   <div className="w-24 h-24 bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center mx-auto mb-6 shadow-sm">
-                    <Users className="w-10 h-10 text-white/30" />
+                    <Users className="w-10 h-10 text-white/60" />
                   </div>
                   <h3 className="text-2xl font-extrabold text-white mb-2">
                     No applicants found

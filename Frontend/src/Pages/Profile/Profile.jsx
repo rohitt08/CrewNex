@@ -510,13 +510,13 @@ const Profile = () => {
                       name="bio"
                       value={user.bio || ""}
                       onChange={handleInputChange}
-                      className="w-full p-4 bg-white/5 border border-white/10 text-white rounded-2xl focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all resize-y min-h-[120px] font-medium placeholder-white/30"
+                      className="w-full p-4 bg-white/5 border border-white/10 text-white rounded-2xl focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all resize-y min-h-[120px] font-medium placeholder-white/60"
                       placeholder="Write a brief introduction about yourself..."
                     />
                   ) : (
                     <p className="text-apple-text-secondary font-medium leading-relaxed max-w-4xl bg-white/5 border border-white/10 p-5 rounded-2xl text-sm sm:text-base">
                       {user.bio || (
-                        <span className="text-white/30 italic">
+                        <span className="text-white/60 italic">
                           No description provided yet.
                         </span>
                       )}
@@ -584,7 +584,7 @@ const Profile = () => {
                         onChange={(e) => setNewSkill(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder="Type a skill and press enter..."
-                        className="flex-1 bg-transparent border-none px-4 py-2 focus:outline-none text-white text-sm font-semibold w-full placeholder-white/30"
+                        className="flex-1 bg-transparent border-none px-4 py-2 focus:outline-none text-white text-sm font-semibold w-full placeholder-white/60"
                       />
                       <motion.button
                         whileHover={{ scale: 1.02 }}
@@ -678,7 +678,7 @@ const Profile = () => {
                     </span>
                     {isEditing ? (
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 font-extrabold">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 font-extrabold">
                           $
                         </span>
                         <input
@@ -904,7 +904,7 @@ const Profile = () => {
                           onChange={(e) =>
                             handleSocialChange("github", e.target.value)
                           }
-                          className="flex-1 px-4 py-3 border border-white/20 rounded-xl focus:outline-none focus:border-apple-blue bg-white/5 text-white text-sm font-semibold transition-all w-full placeholder-white/30"
+                          className="flex-1 px-4 py-3 border border-white/20 rounded-xl focus:outline-none focus:border-apple-blue bg-white/5 text-white text-sm font-semibold transition-all w-full placeholder-white/60"
                         />
                       </div>
                       <div className="flex items-center gap-3">
@@ -918,7 +918,7 @@ const Profile = () => {
                           onChange={(e) =>
                             handleSocialChange("linkedin", e.target.value)
                           }
-                          className="flex-1 px-4 py-3 border border-white/20 rounded-xl focus:outline-none focus:border-apple-blue bg-white/5 text-white text-sm font-semibold transition-all w-full placeholder-white/30"
+                          className="flex-1 px-4 py-3 border border-white/20 rounded-xl focus:outline-none focus:border-apple-blue bg-white/5 text-white text-sm font-semibold transition-all w-full placeholder-white/60"
                         />
                       </div>
                       <div className="flex items-center gap-3">
@@ -932,7 +932,7 @@ const Profile = () => {
                           onChange={(e) =>
                             handleSocialChange("portfolio", e.target.value)
                           }
-                          className="flex-1 px-4 py-3 border border-white/20 rounded-xl focus:outline-none focus:border-apple-blue bg-white/5 text-white text-sm font-semibold transition-all w-full placeholder-white/30"
+                          className="flex-1 px-4 py-3 border border-white/20 rounded-xl focus:outline-none focus:border-apple-blue bg-white/5 text-white text-sm font-semibold transition-all w-full placeholder-white/60"
                         />
                       </div>
                     </div>
@@ -1015,7 +1015,7 @@ const Profile = () => {
                           !user.social.linkedin &&
                           !user.social.portfolio)) && (
                         <div className="p-8 rounded-2xl bg-white/5 border-2 border-dashed border-white/20 flex flex-col items-center justify-center text-center">
-                          <Globe className="w-10 h-10 text-white/30 mb-3" />
+                          <Globe className="w-10 h-10 text-white/60 mb-3" />
                           <p className="text-apple-text-secondary text-sm font-bold">
                             No links connected
                           </p>

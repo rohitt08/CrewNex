@@ -106,7 +106,7 @@ const ProjectCard = ({ project, index }) => {
             <span className="text-xl font-black text-apple-blue leading-none">
               {project.applicantCount || 0}
             </span>
-            <span className="text-[9px] text-white/50 font-bold uppercase tracking-widest mt-1">
+            <span className="text-[9px] text-white/80 font-bold uppercase tracking-widest mt-1">
               Apps
             </span>
           </div>
@@ -376,7 +376,7 @@ const AdminDashboard = () => {
                 className="liquid-glass-card rounded-[2rem] p-16 text-center max-w-2xl mx-auto shadow-sm"
               >
                 <div className="w-24 h-24 bg-white/5 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-6">
-                  <FolderOpen className="w-12 h-12 text-white/30" />
+                  <FolderOpen className="w-12 h-12 text-white/60" />
                 </div>
                 <h3 className="text-2xl font-extrabold text-white mb-2">
                   No projects yet

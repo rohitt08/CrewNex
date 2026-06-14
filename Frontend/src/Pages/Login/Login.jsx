@@ -202,7 +202,7 @@ const Login = () => {
                   Email Address
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/40">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
                     <Mail className="w-5 h-5" />
                   </div>
                   <input
@@ -210,7 +210,7 @@ const Login = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/30 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
                     placeholder="Enter your email"
                     required
                   />
@@ -223,7 +223,7 @@ const Login = () => {
                   Password
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/40">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
                     <Lock className="w-5 h-5" />
                   </div>
                   <input
@@ -231,7 +231,7 @@ const Login = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/30 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
                     placeholder="••••••••"
                     required
                   />

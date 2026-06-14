@@ -217,7 +217,7 @@ const Register = () => {
                   Full Name
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/40">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
                     <User className="w-5 h-5" />
                   </div>
                   <input
@@ -225,7 +225,7 @@ const Register = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/30 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
                     placeholder="Enter your name"
                     required
                   />
@@ -238,7 +238,7 @@ const Register = () => {
                   Email Address
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/40">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
                     <Mail className="w-5 h-5" />
                   </div>
                   <input
@@ -246,7 +246,7 @@ const Register = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/30 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
                     placeholder="Enter your email"
                     required
                   />
@@ -259,7 +259,7 @@ const Register = () => {
                   Password
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/40">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
                     <Lock className="w-5 h-5" />
                   </div>
                   <input
@@ -267,7 +267,7 @@ const Register = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/30 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
                     placeholder="Create a password"
                     required
                   />
@@ -288,7 +288,7 @@ const Register = () => {
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all ${
                       formData.role === "seeker"
                         ? "border-apple-blue bg-apple-blue/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-                        : "border-white/10 hover:border-white/20 bg-white/5 text-white/50 hover:text-white"
+                        : "border-white/10 hover:border-white/20 bg-white/5 text-white/80 hover:text-white"
                     }`}
                   >
                     <GraduationCap
@@ -307,7 +307,7 @@ const Register = () => {
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all ${
                       formData.role === "creator"
                         ? "border-purple-500 bg-purple-500/20 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]"
-                        : "border-white/10 hover:border-white/20 bg-white/5 text-white/50 hover:text-white"
+                        : "border-white/10 hover:border-white/20 bg-white/5 text-white/80 hover:text-white"
                     }`}
                   >
                     <Briefcase
