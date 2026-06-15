@@ -15,27 +15,23 @@ import { toast } from "react-hot-toast";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState(localStorage.getItem("role"));
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const username = localStorage.getItem("username") || "user";
-  const [profilePic, setProfilePic] = useState(null);
-  const [scrolled, setScrolled] = useState(false);
-
+  const [profilePic, setProfilePic] = useState(() => {
+    try {
+      const userStr = localStorage.getItem("user");
+      return userStr ? JSON.parse(userStr).profilePic : null;
+    } catch {
+      return null;
+    }
+  });
   const location = useLocation();
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const BASE_URL = API_URL.replace("/api", "");
-
-  // Handle Scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Handle Click Outside Dropdown
   useEffect(() => {
@@ -78,7 +74,7 @@ const Navbar = () => {
     } else {
       setProfilePic(null);
     }
-  }, [userRole]);
+  }, [userRole, API_URL]);
 
   const isLoggedIn = !!userRole;
 
@@ -171,11 +167,24 @@ const Navbar = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`relative px-4 py-2 rounded-xl text-sm font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-apple-blue ${isActive ? "bg-white/10 text-white" : "text-apple-text-secondary hover:text-white hover:bg-white/5"}`}
+                  className="relative px-4 py-2 rounded-xl text-sm font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-apple-blue"
                 >
-                  <span className="relative z-10">
+                  <span
+                    className={`relative z-10 ${isActive ? "text-white" : "text-apple-text-secondary hover:text-white"}`}
+                  >
                     {item.label}
                   </span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="absolute inset-0 bg-white/10 rounded-xl"
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.6,
+                      }}
+                    />
+                  )}
                 </Link>
               );
             })}

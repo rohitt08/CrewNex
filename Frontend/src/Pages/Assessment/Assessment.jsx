@@ -88,7 +88,6 @@ const Assessment = () => {
   // ── Step 1: Verify the assessment token ─────────────────────────────────────
   useEffect(() => {
     if (!token) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setErrorMsg(
         "No assessment token found in the link. Please use the link from your email.",
       );
