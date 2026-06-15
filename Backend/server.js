@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express=require("express");
+const path=require("path");
 const connectDB = require("./config/db");
 const app=express();
 const cors=require("cors");
@@ -31,8 +32,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Health check endpoint for Render
-app.get('/', (req, res) => {
+// Health check endpoint for API
+app.get('/api', (req, res) => {
     res.status(200).send('API is running');
 });
 app.use("/uploads", express.static("uploads"));
@@ -49,6 +50,14 @@ app.use("/api/projects", projectRouter);
 app.use('/api/auth',userRouter);
 
 app.use(errorHandler);
+
+// Serve Frontend Static Files
+const frontendPath = path.join(__dirname, "../Frontend/dist");
+app.use(express.static(frontendPath));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
 
 const PORT=process.env.PORT || 8080;
 
