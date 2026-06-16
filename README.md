@@ -33,7 +33,7 @@ CrewNex is a full-stack platform designed to bridge the gap between creative pro
 
 ### Frontend
 - **Framework**: [React](https://react.dev/) (v19) with [Vite](https://vitejs.dev/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v4)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Routing**: React Router DOM v7
 - **Notifications**: React Hot Toast
