@@ -1,6 +1,6 @@
 # CrewNex 🚀
 
-> **A Next-Generation Collaboration Platform for Creators & Seekers**
+> **A Next-Gen Collaboration Platform for Creators & Seekers**
 
 CrewNex is a full-stack platform designed to bridge the gap between creative professionals and talented job seekers. Creators can post projects, manage applications, and assemble their dream teams, while seekers can explore opportunities, apply for projects, and build their professional portfolio.
 
