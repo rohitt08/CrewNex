@@ -87,10 +87,8 @@ app.get('/api', (req, res) => {
 app.use("/uploads", express.static("uploads"));
 
 
-//Connect Database (only if not in test environment)
-if (process.env.NODE_ENV !== "test") {
-  connectDB();
-}
+//Connect Database
+connectDB();
 
 
 
@@ -110,11 +108,9 @@ app.get(/.*/, (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
-if (process.env.NODE_ENV !== "test") {
-  const PORT=process.env.PORT || 8080;
-  server.listen(PORT,()=>{
-      console.log('Server running at the ',PORT);
-  });
-}
+const PORT=process.env.PORT || 8080;
+server.listen(PORT,()=>{
+    console.log('Server running at the ',PORT);
+});
 
 module.exports = app;

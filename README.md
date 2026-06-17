@@ -21,6 +21,9 @@ CrewNex is a full-stack platform designed to bridge the gap between creative pro
 - **Application Review**: Review candidate applications, assess skills, and conduct interviews.
 - **Admin Dashboard**: Comprehensive overview of platform statistics and user activity.
 
+### Collaboration Tools
+- **Real-Time Team Chat**: Communicate instantly within specific project rooms via integrated Socket.io live messaging.
+
 ### Technical Highlights
 - **Authentication**: Secure JWT-based authentication with role-based access control (RBAC).
 - **Responsive Design**: Mobile-first architecture using Tailwind CSS v4.
@@ -44,6 +47,7 @@ CrewNex is a full-stack platform designed to bridge the gap between creative pro
 - **Database**: [MongoDB](https://www.mongodb.com/) via Mongoose
 - **Authentication**: JSON Web Tokens (JWT) & bcrypt
 - **File Uploads**: Cloudinary & Multer
+- **Real-Time Communication**: Socket.io
 
 ### DevOps & Tools
 - **Containerization**: Docker & Docker Compose

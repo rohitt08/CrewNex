@@ -67,15 +67,15 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !socketRef.current) return;
 
     const messageData = {
       projectId,
       senderId: currentUserId,
-      text: newMessage,
+      content: newMessage.trim()
     };
 
-    socketRef.current?.emit("send_message", messageData);
+    socketRef.current.emit("send_message", messageData);
     setNewMessage("");
   };
 
@@ -93,7 +93,7 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
             onClick={() => setIsOpen(true)}
             className="fixed bottom-6 right-6 w-14 h-14 bg-apple-blue text-white rounded-full flex items-center justify-center shadow-[0_8px_30px_rgba(59,130,246,0.4)] z-50 transition-colors hover:bg-blue-600 border border-white/10"
           >
-            <span className="font-semibold text-lg">Chat</span>
+            <MessageSquare className="w-6 h-6" />
           </motion.button>
         )}
       </AnimatePresence>
