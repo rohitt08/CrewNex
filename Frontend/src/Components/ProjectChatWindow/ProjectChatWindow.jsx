@@ -18,15 +18,33 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const fetchHistory = React.useCallback(async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${API_URL}/chat/${projectId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.success) {
+        setMessages(res.data.messages);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Could not load chat history");
+    } finally {
+      setLoading(false);
+    }
+  }, [projectId]);
+
   useEffect(() => {
     if (isOpen) {
       scrollToBottom();
     }
   }, [messages, isOpen]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   useEffect(() => {
     // Only connect if the chat is open
@@ -45,25 +63,7 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
     return () => {
       // Cleanup on unmount or close if you want, but typical is keep connection
     };
-  }, [isOpen, projectId]);
-
-  const fetchHistory = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_URL}/chat/${projectId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.data.success) {
-        setMessages(res.data.messages);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Could not load chat history");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [isOpen, projectId, fetchHistory]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
