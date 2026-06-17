@@ -129,15 +129,19 @@ const getProjectById = async (req, res) => {
     });
 
     let hasApplied = false;
+    let applicationStatus = null;
     if (req.userId) {
       const existing = await Application.findOne({
         project: project._id,
         applicant: req.userId,
       });
-      hasApplied = !!existing;
+      if (existing) {
+        hasApplied = true;
+        applicationStatus = existing.status;
+      }
     }
 
-    res.json({ success: true, project: { ...project.toObject(), applicantCount, hasApplied } });
+    res.json({ success: true, project: { ...project.toObject(), applicantCount, hasApplied, applicationStatus } });
   } catch (error) {
     console.error("Get project error:", error);
     res.status(500).json({ success: false, message: error.message });

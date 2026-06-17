@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout";
+import ProjectChatWindow from "../../Components/ProjectChatWindow/ProjectChatWindow";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -452,6 +453,7 @@ const ProjectDetail = () => {
   const [loading, setLoading] = useState(true);
   const [showApply, setShowApply] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
   const isLoggedIn = !!localStorage.getItem("token");
@@ -476,6 +478,7 @@ const ProjectDetail = () => {
       if (res.data.success) {
         setProject(res.data.project);
         setHasApplied(res.data.project.hasApplied || false);
+        setApplicationStatus(res.data.project.applicationStatus || null);
       }
     } catch (err) {
       console.error(err);
@@ -518,6 +521,8 @@ const ProjectDetail = () => {
 
   if (!project) return null;
 
+  const canChat = isCreator || applicationStatus === "selected" || applicationStatus === "accepted";
+
   return (
     <Layout>
       <AnimatePresence>
@@ -532,6 +537,8 @@ const ProjectDetail = () => {
           />
         )}
       </AnimatePresence>
+
+      {canChat && <ProjectChatWindow projectId={project._id} currentUserId={currentUserId} />}
 
       <div className="min-h-screen pb-32 transition-colors duration-300">
         {/* Premium Hero Header */}
