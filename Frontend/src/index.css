@@ -1,34 +1,49 @@
 @import "tailwindcss";
 
-/* We permanently enforce dark mode, but we can keep the custom variant just in case */
-@custom-variant dark (&:where(.dark, .dark *));
+/* We enforce a premium, production-ready light theme */
 
 @theme {
-  /* Core Apple Colors */
-  --color-apple-bg: #0a0a0a;
-  --color-apple-surface: #111111;
-  --color-apple-glass: rgba(255, 255, 255, 0.15);
-  --color-apple-glass-border: rgba(255, 255, 255, 0.20);
-  --color-apple-text-primary: #ffffff;
-  --color-apple-text-secondary: #d4d4d8; /* Lightened from #a1a1aa for better contrast */
+  /* 
+    Elevating all 'slate' references to pure neutral (Zinc) hex codes.
+    This removes the "muddy blue" tint of default slate and provides a 
+    razor-sharp, high-contrast monochrome base used by top-tier SaaS (Vercel, Linear).
+  */
+  --color-slate-50: #fafafa;
+  --color-slate-100: #f4f4f5;
+  --color-slate-200: #e4e4e7;
+  --color-slate-300: #d4d4d8;
+  --color-slate-400: #a1a1aa;
+  --color-slate-500: #71717a;
+  --color-slate-600: #52525b;
+  --color-slate-700: #3f3f46;
+  --color-slate-800: #27272a;
+  --color-slate-900: #09090b;
 
-  /* Accents */
-  --color-apple-blue: #3b82f6;
-  --color-apple-blue-hover: #2563eb;
-  --color-apple-success: #22c55e;
+  /* Core UI Colors */
+  --color-apple-bg: #fafafa;
+  --color-apple-surface: #ffffff;
+  --color-apple-glass: rgba(255, 255, 255, 0.8);
+  --color-apple-glass-border: rgba(228, 228, 231, 0.8);
+  --color-apple-text-primary: #09090b;
+  --color-apple-text-secondary: #71717a;
+
+  /* Accents - Upgraded to Electric Blue for sharp tech brand identity */
+  --color-apple-blue: #0052FF;
+  --color-apple-blue-hover: #0045D8;
+  --color-apple-success: #10b981;
   --color-apple-warning: #f59e0b;
   --color-apple-error: #ef4444;
 
   /* Typography */
   --font-sans:
-    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 @layer base {
   body {
-    /* Permanent dark mode baseline */
-    @apply font-sans antialiased bg-apple-bg text-apple-text-primary selection:bg-apple-blue/30 selection:text-white overflow-x-hidden;
+    /* Permanent light mode baseline */
+    @apply font-sans antialiased bg-apple-bg text-apple-text-primary selection:bg-apple-blue/20 selection:text-apple-blue overflow-x-hidden overflow-y-scroll;
     background-color: var(--color-apple-bg);
     color: var(--color-apple-text-primary);
   }
@@ -37,11 +52,11 @@
 /* Custom Liquid Glass Utilities */
 @layer utilities {
   .liquid-glass {
-    @apply bg-apple-glass backdrop-blur-md border border-apple-glass-border shadow-[0_8px_32px_rgba(0,0,0,0.12)];
+    @apply bg-apple-glass backdrop-blur-lg border border-apple-glass-border shadow-sm;
   }
 
   .liquid-glass-card {
-    @apply bg-apple-surface/85 backdrop-blur-md border border-apple-glass-border shadow-[0_4px_24px_rgba(0,0,0,0.1)] hover:bg-apple-surface/95 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)] hover:border-white/30 transition-all duration-300;
+    @apply bg-apple-surface backdrop-blur-lg border border-apple-glass-border shadow-sm hover:shadow-md transition-all duration-300;
     transform: translateZ(0);
     will-change: transform, box-shadow, border-color;
     backface-visibility: hidden;
@@ -53,15 +68,15 @@
   }
 
   .text-gradient-blue {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-apple-blue to-indigo-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-apple-blue to-indigo-600;
   }
 
   .bg-gradient-premium {
-    @apply bg-gradient-to-br from-apple-surface via-apple-bg to-apple-surface;
+    @apply bg-gradient-to-br from-white via-slate-50 to-white;
   }
 
   .bg-apple-btn {
-    @apply bg-apple-blue text-white shadow-[0_2px_10px_rgba(59,130,246,0.3)] hover:bg-apple-blue-hover hover:shadow-[0_4px_20px_rgba(59,130,246,0.4)] transition-all duration-300;
+    @apply bg-apple-blue text-white shadow-sm hover:bg-apple-blue-hover hover:shadow-md transition-all duration-300;
   }
 
   .hide-scrollbar::-webkit-scrollbar {

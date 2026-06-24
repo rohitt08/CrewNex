@@ -31,6 +31,7 @@ const Assessment = lazy(() => import("./Pages/Assessment/Assessment"));
 const ManageProject = lazy(() => import("./Pages/ManageProject/ManageProject"));
 const Interview = lazy(() => import("./Pages/Interview/Interview"));
 const About = lazy(() => import("./Pages/About/About"));
+const NotFound = lazy(() => import("./Pages/NotFound/NotFound"));
 
 const App = () => {
   return (
@@ -95,6 +96,14 @@ const App = () => {
               }
             />
             <Route
+              path="/edit-project/:id"
+              element={
+                <ProtectedRoute>
+                  <CreateProject />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/my-applications"
               element={
                 <ProtectedRoute>
@@ -128,6 +137,9 @@ const App = () => {
             />
 
             <Route path="/assessment" element={<Assessment />} />
+
+            {/* 404 Catch-All Route */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
@@ -136,3 +148,5 @@ const App = () => {
 };
 
 export default App;
+
+
