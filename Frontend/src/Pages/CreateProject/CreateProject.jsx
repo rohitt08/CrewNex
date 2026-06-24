@@ -155,9 +155,10 @@ const CreateProject = () => {
       return copy;
     });
 
+    let toastId;
     try {
       setSubmitting(true);
-      const toastId = toast.loading(id ? "Updating project..." : "Creating project...");
+      toastId = toast.loading(id ? "Updating project..." : "Creating project...");
 
       const payload = {
         title: form.title.trim(),

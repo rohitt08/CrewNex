@@ -9,6 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+// eslint-disable-next-line no-unused-vars
 const FeatureCard = ({ title, desc, icon: Icon, colorClass, index }) => (
   <div className="group relative flex flex-col bg-white border border-slate-200 shadow-sm hover:shadow-md rounded-xl p-8 overflow-hidden transition-all duration-300">
     <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-6 border border-slate-200 ${colorClass} transition-colors duration-300`}>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import Layout from "../../Components/Layout/Layout";
 import axios from "axios";
@@ -324,6 +325,10 @@ const Profile = () => {
     <Layout>
       <div className="min-h-screen relative overflow-hidden pb-20 transition-colors duration-300 bg-slate-50">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-apple-blue/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100 }}
             className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden mb-8"
           >
@@ -677,6 +682,7 @@ const Profile = () => {
                   )}
                 </div>
               </motion.div>
+              )}
             </div>
           </div>
         </div>
