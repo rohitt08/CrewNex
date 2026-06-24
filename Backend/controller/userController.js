@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const userModel = require("../models/userModel");
 const generateToken = require("../utils/generateToken");
 const { sendPasswordResetOTP } = require("../utils/emailer");
@@ -119,8 +120,8 @@ const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate cryptographically secure 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
     const otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
 
     user.resetPasswordOTP = otp;

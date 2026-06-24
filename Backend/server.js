@@ -21,12 +21,19 @@ app.use(helmet({
   crossOriginResourcePolicy: false, // allow serving static images from different domains
 }));
 
-const limiter = rateLimit({
+const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 1000, // Increased limit to 1000 to prevent normal React SPA traffic blocking
   message: 'Too many requests from this IP, please try again after 15 minutes'
 });
-app.use('/api', limiter);
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Max 10 requests per 15 minutes for auth endpoints
+  message: 'Too many authentication attempts, please try again after 15 minutes'
+});
+app.use('/api', globalLimiter);
+app.use('/api/auth', authLimiter);
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());

@@ -818,8 +818,66 @@ const submitInterview = async (req, res) => {
   }
 };
 
+const updateProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ success: false, message: "Project not found" });
+    }
+
+    if (project.createdBy.toString() !== req.userId) {
+      return res.status(403).json({ success: false, message: "Not authorized to update this project" });
+    }
+
+    const {
+      title,
+      description,
+      type,
+      roles,
+      tags,
+      deadline,
+      techStack,
+      duration,
+      budget,
+      status
+    } = req.body;
+
+    if (!title || !description || !type || !roles || roles.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Title, description, type, and at least one role are required.",
+      });
+    }
+
+    project.title = title;
+    project.description = description;
+    project.type = type;
+    project.roles = roles;
+    project.tags = tags || [];
+    project.deadline = deadline;
+    project.techStack = techStack || [];
+    project.duration = duration;
+    project.budget = budget;
+    if (status) project.status = status;
+
+    // Recalculate total members based on updated roles
+    if (roles && roles.length > 0) {
+      project.totalMembers = roles.reduce((sum, r) => sum + (Number(r.membersNeeded) || 1), 0);
+    }
+
+    await project.save();
+
+    console.log("Project updated successfully!", project._id);
+    res.status(200).json({ success: true, project });
+  } catch (error) {
+    console.error("Update Project Error:", error);
+    res.status(500).json({ success: false, message: error.message || "Server error" });
+  }
+};
+
 module.exports = {
   createProject,
+  updateProject,
   getAllProjects,
   getProjectById,
   applyToProject,

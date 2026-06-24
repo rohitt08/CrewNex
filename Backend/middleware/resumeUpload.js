@@ -12,12 +12,24 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    // Cloudinary treats PDFs and DOC/DOCX as raw files
-    return {
-      folder: "crewnex_resumes",
-      resource_type: "raw", 
-      public_id: `${Date.now()}-${file.originalname}`,
-    };
+    const isPdf = file.mimetype === "application/pdf";
+    // Strip original extension to prevent double extensions
+    const baseName = file.originalname.replace(/\.[^/.]+$/, "");
+    
+    if (isPdf) {
+      return {
+        folder: "crewnex_resumes",
+        resource_type: "image", // PDFs MUST be 'image' to view inline
+        public_id: `${Date.now()}-${baseName}`,
+        format: "pdf" // Explicitly format as PDF
+      };
+    } else {
+      return {
+        folder: "crewnex_resumes",
+        resource_type: "raw", // DOC/DOCX MUST be 'raw'
+        public_id: `${Date.now()}-${file.originalname}`,
+      };
+    }
   },
 });
 
