@@ -12,12 +12,12 @@ export const Skeleton = ({ className = "", style = {} }) => {
         repeatType: "reverse",
         ease: "easeInOut",
       }}
-      className={`bg-apple-surface/50 border border-apple-glass-border overflow-hidden relative ${className}`}
+      className={`bg-white/50 border border-slate-200 overflow-hidden relative ${className}`}
       style={style}
     >
       {/* Shimmer effect */}
       <div
-        className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_2s_infinite]"
+        className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent "
         style={{
           backgroundImage:
             "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)",
@@ -30,3 +30,6 @@ export const Skeleton = ({ className = "", style = {} }) => {
 export const ProjectCardSkeleton = () => (
   <Skeleton className="h-[380px] w-full rounded-2xl" />
 );
+
+
+

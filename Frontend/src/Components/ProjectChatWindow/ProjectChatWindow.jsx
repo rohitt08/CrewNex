@@ -88,10 +88,10 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ y: -2 }}
+            whileTap={{ y: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 w-14 h-14 bg-apple-blue text-white rounded-full flex items-center justify-center shadow-[0_8px_30px_rgba(59,130,246,0.4)] z-50 transition-colors hover:bg-blue-600 border border-white/10"
+            className="fixed bottom-6 right-6 w-14 h-14 bg-apple-blue text-slate-900 rounded-full flex items-center justify-center shadow-sm z-50 transition-colors hover:bg-blue-600 border border-slate-200"
           >
             <MessageSquare className="w-6 h-6" />
           </motion.button>
@@ -106,19 +106,19 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-6 right-6 w-80 sm:w-96 h-[500px] bg-apple-surface rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.6)] z-50 flex flex-col border border-white/10 overflow-hidden"
+            className="fixed bottom-6 right-6 w-80 sm:w-96 h-[500px] bg-white rounded-2xl shadow-sm z-50 flex flex-col border border-slate-200 overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-white/5 backdrop-blur-md border-b border-white/10 px-5 py-4 flex items-center justify-between flex-shrink-0">
+            <div className="bg-slate-50 backdrop-blur-md border-b border-slate-200 px-5 py-4 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-apple-blue/20 flex items-center justify-center border border-apple-blue/30">
-                  <MessageSquare className="w-4 h-4 text-apple-blue" />
+                <div className="w-8 h-8 rounded-full bg-apple-blue/20 flex items-center justify-center border border-blue-300">
+                  <MessageSquare className="w-4 h-4 text-blue-600" />
                 </div>
-                <h3 className="font-extrabold text-white text-base">Team Chat</h3>
+                <h3 className="font-extrabold text-slate-900 text-base">Team Chat</h3>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 bg-white/5 hover:bg-white/10 rounded-full transition-colors text-apple-text-secondary"
+                className="p-1.5 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -128,10 +128,10 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#0a0f1c] scrollbar-thin scrollbar-thumb-white/10">
               {loading ? (
                 <div className="flex items-center justify-center h-full">
-                  <Loader2 className="w-6 h-6 animate-spin text-apple-blue" />
+                  <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
                 </div>
               ) : messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-apple-text-secondary">
+                <div className="flex flex-col items-center justify-center h-full text-slate-500">
                   <MessageSquare className="w-8 h-8 mb-2 opacity-50" />
                   <p className="text-sm font-semibold">No messages yet.</p>
                   <p className="text-xs">Start the conversation!</p>
@@ -143,15 +143,15 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
                     <div key={msg._id || idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-[80%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                         {!isMe && (
-                          <span className="text-[10px] text-apple-text-secondary font-bold ml-2 mb-1">
+                          <span className="text-[10px] text-slate-500 font-bold ml-2 mb-1">
                             {msg.sender?.name} {msg.sender?.role ? `(${msg.sender.role})` : ''}
                           </span>
                         )}
                         <div 
                           className={`px-4 py-2.5 rounded-2xl text-sm font-medium leading-relaxed ${
                             isMe 
-                              ? "bg-apple-blue text-white rounded-tr-sm" 
-                              : "bg-white/10 text-white rounded-tl-sm border border-white/5"
+                              ? "bg-apple-blue text-slate-900 rounded-tr-sm" 
+                              : "bg-slate-100 text-slate-900 rounded-tl-sm border border-white/5"
                           }`}
                         >
                           {msg.content}
@@ -165,18 +165,18 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-white/5 backdrop-blur-md border-t border-white/10 flex items-center gap-2 flex-shrink-0">
+            <form onSubmit={handleSendMessage} className="p-3 bg-slate-50 backdrop-blur-md border-t border-slate-200 flex items-center gap-2 flex-shrink-0">
               <input
                 type="text"
                 placeholder="Type a message..."
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder-apple-text-secondary outline-none focus:border-apple-blue/50 focus:bg-white/10 transition-all font-medium"
+                className="flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2.5 text-sm text-slate-900 placeholder-apple-text-secondary outline-none focus:border-apple-blue/50 focus:bg-slate-100 transition-all font-medium"
               />
               <button 
                 type="submit"
                 disabled={!newMessage.trim()}
-                className="p-2.5 bg-apple-blue text-white rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                className="p-2.5 bg-apple-blue text-slate-900 rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -189,3 +189,6 @@ const ProjectChatWindow = ({ projectId, currentUserId }) => {
 };
 
 export default ProjectChatWindow;
+
+
+

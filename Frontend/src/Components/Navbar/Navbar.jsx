@@ -136,7 +136,7 @@ const Navbar = () => {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-100 ease-in-out px-4 pt-4 pb-4 sm:px-6 lg:px-8 flex justify-center`}
       >
         <div
-          className={`w-full max-w-7xl flex items-center justify-between transition-all duration-500 rounded-3xl liquid-glass px-6 py-3`}
+          className={`w-full max-w-7xl flex items-center justify-between transition-all duration-500 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-md px-6 py-3`}
         >
           {/* Logo */}
           <Link
@@ -145,8 +145,8 @@ const Navbar = () => {
           >
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative w-10 h-10 rounded-xl overflow-hidden bg-white/10 border border-white/20 shadow-sm flex items-center justify-center backdrop-blur-md"
+              whileTap={{ y: 0 }}
+              className="relative w-10 h-10 rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm flex items-center justify-center backdrop-blur-md"
             >
               <img
                 src={logo}
@@ -154,13 +154,13 @@ const Navbar = () => {
                 className="w-8 h-8 object-cover rounded-lg"
               />
             </motion.div>
-            <h1 className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-apple-blue to-purple-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)] group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] group-hover:scale-105 transition-all duration-300">
+            <h1 className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-apple-blue to-indigo-600 drop-shadow-sm group-hover:drop-shadow-md group-hover:scale-105 transition-all duration-300">
               CrewNex
             </h1>
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-1 liquid-glass rounded-2xl px-2 py-1.5 absolute left-1/2 -translate-x-1/2">
+          <div className="hidden lg:flex items-center gap-1 bg-white border border-slate-200 shadow-sm rounded-2xl px-2 py-1.5 absolute left-1/2 -translate-x-1/2">
             {getNavItems().map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -170,14 +170,14 @@ const Navbar = () => {
                   className="relative px-4 py-2 rounded-xl text-sm font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-apple-blue"
                 >
                   <span
-                    className={`relative z-10 ${isActive ? "text-white" : "text-apple-text-secondary hover:text-white"}`}
+                    className={`relative z-10 ${isActive ? "text-slate-900 font-bold" : "text-slate-500 hover:text-slate-900"}`}
                   >
                     {item.label}
                   </span>
                   {isActive && (
                     <motion.div
                       layoutId="nav-indicator"
-                      className="absolute inset-0 bg-white/10 rounded-xl"
+                      className="absolute inset-0 bg-slate-200/50 rounded-xl"
                       transition={{
                         type: "spring",
                         bounce: 0.2,
@@ -196,15 +196,15 @@ const Navbar = () => {
               <div className="flex items-center gap-3">
                 <Link
                   to="/login"
-                  className="px-5 py-2 text-sm font-bold text-apple-text-secondary hover:text-white transition-colors"
+                  className="px-5 py-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
                 >
                   Sign in
                 </Link>
                 <Link to="/register">
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="bg-apple-btn px-6 py-2 rounded-xl text-sm font-bold text-white shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
+                    className="bg-slate-900 px-6 py-2 rounded-xl text-sm font-bold text-white shadow-sm hover:shadow-md"
                   >
                     Get started
                   </motion.button>
@@ -213,10 +213,10 @@ const Navbar = () => {
             ) : (
               <div className="relative" ref={dropdownRef}>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ y: 0 }}
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-3 p-1 pr-3 rounded-full liquid-glass hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-apple-blue"
+                  className="flex items-center gap-3 p-1 pr-3 rounded-full bg-white border border-slate-200 shadow-sm hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-apple-blue"
                 >
                   {profilePic ? (
                     <img
@@ -226,15 +226,15 @@ const Navbar = () => {
                           : `${BASE_URL}${profilePic}`
                       }
                       alt="Profile"
-                      className="w-9 h-9 rounded-full object-cover border border-white/20"
+                      className="w-9 h-9 rounded-full object-cover border border-slate-200"
                     />
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-apple-blue/20 text-apple-blue flex items-center justify-center text-sm font-bold border border-apple-blue/30">
+                    <div className="w-9 h-9 rounded-full bg-blue-50 text-apple-blue flex items-center justify-center text-sm font-bold border border-blue-200">
                       {username[0]?.toUpperCase() || "U"}
                     </div>
                   )}
                   <ChevronDown
-                    className={`w-4 h-4 text-apple-text-secondary transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
+                    className={`w-4 h-4 text-slate-500 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
                   />
                 </motion.button>
 
@@ -250,10 +250,10 @@ const Navbar = () => {
                         stiffness: 300,
                         damping: 25,
                       }}
-                      className="absolute right-0 mt-3 w-64 liquid-glass-card rounded-2xl py-2 origin-top-right overflow-hidden"
+                      className="absolute right-0 mt-3 w-64 bg-white border border-slate-200 shadow-md rounded-2xl py-2 origin-top-right overflow-hidden"
                     >
-                      <div className="px-5 py-4 border-b border-white/10 mb-2 bg-white/5">
-                        <p className="text-sm font-bold text-white truncate">
+                      <div className="px-5 py-4 border-b border-slate-100 mb-2 bg-slate-50">
+                        <p className="text-sm font-bold text-slate-900 truncate">
                           {username}
                         </p>
                         <p className="text-[10px] font-bold text-apple-blue uppercase tracking-wider mt-1">
@@ -264,14 +264,14 @@ const Navbar = () => {
                       <div className="px-2 py-1 space-y-1">
                         <Link
                           to="/profile"
-                          className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-apple-text-secondary rounded-xl hover:bg-white/10 hover:text-white transition-colors"
+                          className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-500 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors"
                         >
                           <User className="w-4 h-4" /> Profile
                         </Link>
                         {(userRole === "creator" || userRole === "admin") && (
                           <Link
                             to="/admin-dashboard"
-                            className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-apple-text-secondary rounded-xl hover:bg-white/10 hover:text-white transition-colors"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-500 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors"
                           >
                             <LayoutDashboard className="w-4 h-4" />{" "}
                             {userRole === "admin" ? "Admin Panel" : "Dashboard"}
@@ -280,17 +280,17 @@ const Navbar = () => {
                         {userRole === "user" && (
                           <Link
                             to="/my-applications"
-                            className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-apple-text-secondary rounded-xl hover:bg-white/10 hover:text-white transition-colors"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-500 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors"
                           >
                             <LayoutDashboard className="w-4 h-4" /> Applications
                           </Link>
                         )}
 
-                        <div className="h-px bg-white/10 my-2 mx-3"></div>
+                        <div className="h-px bg-slate-200 my-2 mx-3"></div>
 
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-apple-error rounded-xl hover:bg-apple-error/10 transition-colors"
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-apple-error rounded-xl hover:bg-red-50 transition-colors"
                         >
                           <LogOut className="w-4 h-4" /> Sign out
                         </button>
@@ -305,7 +305,7 @@ const Navbar = () => {
           {/* Mobile Toggle Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-apple-text-secondary hover:text-white hover:bg-white/10 rounded-xl transition-colors focus:outline-none"
+            className="lg:hidden p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors focus:outline-none"
             aria-label="Toggle Menu"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -321,7 +321,7 @@ const Navbar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 lg:hidden"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setIsOpen(false)}
           />
         )}
@@ -335,13 +335,13 @@ const Navbar = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-y-0 right-0 w-full max-w-sm bg-apple-surface border-l border-apple-glass-border shadow-2xl z-50 lg:hidden flex flex-col overflow-hidden"
+            className="fixed inset-y-0 right-0 w-full max-w-sm bg-white border-l border-slate-200 shadow-2xl z-50 lg:hidden flex flex-col overflow-hidden"
           >
-            <div className="flex items-center justify-between p-5 border-b border-apple-glass-border bg-white/5">
-              <h2 className="text-xl font-extrabold text-white">Menu</h2>
+            <div className="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50">
+              <h2 className="text-xl font-extrabold text-slate-900">Menu</h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 text-apple-text-secondary hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -349,7 +349,7 @@ const Navbar = () => {
 
             <div className="p-5 overflow-y-auto flex-1 hide-scrollbar">
               {isLoggedIn && (
-                <div className="flex items-center gap-4 mb-8 p-4 liquid-glass rounded-2xl">
+                <div className="flex items-center gap-4 mb-8 p-4 bg-white border border-slate-200 shadow-sm rounded-2xl">
                   {profilePic ? (
                     <img
                       src={
@@ -357,15 +357,15 @@ const Navbar = () => {
                           ? profilePic
                           : `${BASE_URL}${profilePic}`
                       }
-                      className="w-12 h-12 rounded-full object-cover border border-white/20"
+                      className="w-12 h-12 rounded-full object-cover border border-slate-200"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-apple-blue/20 text-apple-blue border border-apple-blue/30 flex items-center justify-center font-bold text-lg">
+                    <div className="w-12 h-12 rounded-full bg-blue-50 text-apple-blue border border-blue-200 flex items-center justify-center font-bold text-lg">
                       {username[0]?.toUpperCase() || "U"}
                     </div>
                   )}
                   <div>
-                    <p className="text-base font-bold text-white">{username}</p>
+                    <p className="text-base font-bold text-slate-900">{username}</p>
                     <p className="text-[10px] font-bold text-apple-blue uppercase tracking-wider mt-0.5">
                       {userRole}
                     </p>
@@ -380,8 +380,8 @@ const Navbar = () => {
                     to={item.path}
                     className={`block px-5 py-4 rounded-2xl text-sm transition-colors ${
                       location.pathname === item.path
-                        ? "bg-apple-blue/10 text-apple-blue font-bold border border-apple-blue/20"
-                        : "text-apple-text-secondary font-semibold hover:bg-white/5 hover:text-white"
+                        ? "bg-blue-50 text-apple-blue font-bold border border-blue-200"
+                        : "text-slate-500 font-semibold hover:bg-slate-50 hover:text-slate-900"
                     }`}
                   >
                     {item.label}
@@ -389,18 +389,18 @@ const Navbar = () => {
                 ))}
               </div>
 
-              <div className="space-y-3 mt-auto pt-8 border-t border-apple-glass-border">
+              <div className="space-y-3 mt-auto pt-8 border-t border-slate-200">
                 {!isLoggedIn ? (
                   <>
                     <Link
                       to="/login"
-                      className="flex items-center justify-center w-full px-5 py-4 text-sm font-bold text-white bg-white/10 border border-white/20 rounded-2xl hover:bg-white/20 transition-colors"
+                      className="flex items-center justify-center w-full px-5 py-4 text-sm font-bold text-slate-900 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors"
                     >
                       Sign in
                     </Link>
                     <Link
                       to="/register"
-                      className="flex items-center justify-center w-full px-5 py-4 text-sm font-bold text-white bg-apple-btn rounded-2xl transition-colors"
+                      className="flex items-center justify-center w-full px-5 py-4 text-sm font-bold text-white bg-slate-900 rounded-2xl transition-colors"
                     >
                       Get started
                     </Link>
@@ -409,13 +409,13 @@ const Navbar = () => {
                   <>
                     <Link
                       to="/profile"
-                      className="flex items-center gap-3 px-5 py-4 text-sm text-apple-text-secondary hover:text-white hover:bg-white/5 rounded-2xl font-semibold transition-colors"
+                      className="flex items-center gap-3 px-5 py-4 text-sm text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-2xl font-semibold transition-colors"
                     >
                       <User className="w-5 h-5" /> Profile
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-5 py-4 text-sm text-apple-error hover:bg-apple-error/10 rounded-2xl font-semibold transition-colors"
+                      className="w-full flex items-center gap-3 px-5 py-4 text-sm text-apple-error hover:bg-red-50 rounded-2xl font-semibold transition-colors"
                     >
                       <LogOut className="w-5 h-5" /> Sign out
                     </button>
@@ -431,3 +431,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+

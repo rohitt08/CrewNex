@@ -15,9 +15,9 @@ const PageLoader = ({ message = "Loading amazing things..." }) => {
         transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
         className="mb-6"
       >
-        <Loader2 className="w-12 h-12 text-apple-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+        <Loader2 className="w-12 h-12 text-blue-600 drop-shadow-sm" />
       </motion.div>
-      <p className="text-apple-text-secondary font-medium tracking-wide">
+      <p className="text-slate-500 font-medium tracking-wide">
         {message}
       </p>
     </motion.div>
@@ -25,3 +25,6 @@ const PageLoader = ({ message = "Loading amazing things..." }) => {
 };
 
 export default PageLoader;
+
+
+
