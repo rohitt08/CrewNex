@@ -81,13 +81,13 @@ const Interview = () => {
     return (
       <div className="min-h-screen bg-[#111827] flex items-center justify-center p-6 relative overflow-hidden">
         {/* Success Background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+        
 
-        <div className="glass-dark border border-white/10 p-12 rounded-3xl text-center max-w-lg w-full relative z-10 animate-fade-in-up">
-          <div className="w-28 h-28 mx-auto mb-8 rounded-full flex items-center justify-center bg-emerald-500/20 border-2 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.3)]">
-            <CheckCircle2 className="w-14 h-14 text-emerald-400" />
+        <div className="glass-dark border border-slate-200 p-12 rounded-xl text-center max-w-lg w-full relative z-10 animate-fade-in-up">
+          <div className="w-28 h-28 mx-auto mb-8 rounded-full flex items-center justify-center bg-emerald-100 border-2 border-emerald-500 shadow-sm">
+            <CheckCircle2 className="w-14 h-14 text-emerald-600" />
           </div>
-          <h2 className="text-3xl font-extrabold text-white mb-3">
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-3">
             Interview Complete!
           </h2>
           <p className="text-slate-300 mb-10 text-lg">
@@ -97,13 +97,13 @@ const Interview = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate("/my-applications")}
-              className="px-6 py-3.5 rounded-xl bg-emerald-500 text-white text-sm font-bold shadow-[0_4px_15px_rgba(16,185,129,0.3)] hover:bg-emerald-600 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+              className="px-6 py-3.5 rounded-xl bg-emerald-500 text-slate-900 text-sm font-bold shadow-sm hover:bg-emerald-600 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
             >
               View Applications <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => navigate("/")}
-              className="px-6 py-3.5 rounded-xl text-sm font-bold bg-white/10 text-white hover:bg-white/20 transition-all flex items-center justify-center gap-2 border border-white/5"
+              className="px-6 py-3.5 rounded-xl text-sm font-bold bg-slate-100 text-slate-900 hover:bg-slate-200 transition-all flex items-center justify-center gap-2 border border-white/5"
             >
               <Home className="w-4 h-4" /> Go Home
             </button>
@@ -116,19 +116,19 @@ const Interview = () => {
   return (
     <div className="min-h-screen bg-[#0B0F19] flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden">
       {/* Animated Orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-[120px] pointer-events-none animate-blob"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] pointer-events-none animate-blob animation-delay-2000"></div>
+      
+      
 
       {/* Header */}
       <div className="w-full max-w-5xl mb-8 relative z-10 animate-fade-in-up">
-        <div className="glass-dark rounded-3xl border border-white/10 overflow-hidden shadow-2xl backdrop-blur-2xl">
-          <div className="px-8 py-5 flex items-center justify-between border-b border-white/10 bg-white/5">
+        <div className="glass-dark rounded-xl border border-slate-200 overflow-hidden shadow-2xl backdrop-blur-2xl">
+          <div className="px-8 py-5 flex items-center justify-between border-b border-slate-200 bg-slate-50">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-                <Video className="w-5 h-5 text-white" />
+                <Video className="w-5 h-5 text-slate-900" />
               </div>
               <div>
-                <span className="text-xl font-black text-white tracking-tight">
+                <span className="text-xl font-black text-slate-900 tracking-tight">
                   CrewNex{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
                     AI
@@ -165,11 +165,11 @@ const Interview = () => {
         style={{ animationDelay: "0.1s" }}
       >
         {loading ? (
-          <div className="flex flex-col items-center justify-center p-24 glass-dark rounded-3xl border border-white/10 shadow-2xl backdrop-blur-2xl">
-            <div className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center bg-indigo-500/20 border-2 border-indigo-500/50 shadow-[0_0_30px_rgba(99,102,241,0.2)]">
+          <div className="flex flex-col items-center justify-center p-24 glass-dark rounded-xl border border-slate-200 shadow-2xl backdrop-blur-2xl">
+            <div className="w-20 h-20 mx-auto mb-8 rounded-full flex items-center justify-center bg-indigo-500/20 border-2 border-indigo-500/50 shadow-sm">
               <Loader2 className="w-10 h-10 text-indigo-400 animate-spin" />
             </div>
-            <h3 className="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
+            <h3 className="text-2xl font-extrabold text-slate-900 mb-2 flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-indigo-400" /> Evaluating
               Responses
             </h3>
@@ -179,7 +179,7 @@ const Interview = () => {
             </p>
           </div>
         ) : (
-          <div className="glass-dark border border-white/10 p-2 sm:p-4 rounded-[2rem] shadow-2xl backdrop-blur-3xl">
+          <div className="glass-dark border border-slate-200 p-2 sm:p-4 rounded-2xl shadow-2xl backdrop-blur-3xl">
             <InterviewCamera
               key={currentQuestionIndex}
               question={`${currentQuestionIndex + 1}. ${questions[currentQuestionIndex]}`}
@@ -193,3 +193,6 @@ const Interview = () => {
 };
 
 export default Interview;
+
+
+

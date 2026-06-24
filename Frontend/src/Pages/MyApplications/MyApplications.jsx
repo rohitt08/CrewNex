@@ -24,22 +24,22 @@ import EmptyState from "../../Components/States/EmptyState";
 const TYPE_META = {
   capstone: {
     label: "Capstone",
-    color: "bg-apple-blue/10 text-apple-blue border-apple-blue/20",
+    color: "bg-blue-50 text-blue-600 border-blue-200",
     badge: "🎓",
   },
   hackathon: {
     label: "Hackathon",
-    color: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    color: "bg-purple-50 text-purple-600 border-purple-200",
     badge: "⚡",
   },
   group: {
     label: "Community",
-    color: "bg-white/5 text-white border-white/10",
+    color: "bg-slate-50 text-slate-900 border-slate-200",
     badge: "👥",
   },
   freelancing: {
     label: "Freelancing",
-    color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    color: "bg-emerald-50 text-emerald-600 border-emerald-200",
     badge: "💼",
   },
 };
@@ -47,33 +47,33 @@ const TYPE_META = {
 const STATUS_META = {
   pending: {
     label: "Pending",
-    color: "bg-apple-warning/10 text-apple-warning border-apple-warning/20",
+    color: "bg-orange-50 text-orange-600 border-orange-200",
     icon: Clock,
-    dotColor: "bg-apple-warning",
+    dotColor: "bg-orange-500",
   },
   accepted: {
     label: "Accepted",
-    color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    color: "bg-emerald-50 text-emerald-600 border-emerald-200",
     icon: CheckCircle2,
     dotColor: "bg-emerald-500",
   },
   interview_invited: {
     label: "Interview",
-    color: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    color: "bg-purple-50 text-purple-600 border-purple-200",
     icon: Mail,
     dotColor: "bg-purple-500",
   },
   selected: {
     label: "Selected",
-    color: "bg-apple-blue/10 text-apple-blue border-apple-blue/20",
+    color: "bg-blue-50 text-blue-600 border-blue-200",
     icon: ShieldCheck,
-    dotColor: "bg-apple-blue",
+    dotColor: "bg-blue-500",
   },
   rejected: {
     label: "Rejected",
-    color: "bg-apple-error/10 text-apple-error border-apple-error/20",
+    color: "bg-red-50 text-red-600 border-red-200",
     icon: XCircle,
-    dotColor: "bg-apple-error",
+    dotColor: "bg-red-500",
   },
 };
 
@@ -83,7 +83,8 @@ const timeAgo = (dateStr) => {
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 7) return `${days}d ago`;
-  return new Date(dateStr).toLocaleDateString("en-US", {
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata",
     month: "short",
     day: "numeric",
   });
@@ -137,21 +138,21 @@ const MyApplications = () => {
     <Layout>
       <div className="min-h-screen relative overflow-hidden transition-colors duration-300 pb-20">
         {/* Header */}
-        <div className="relative z-10 bg-white/5 border-b border-white/10 backdrop-blur-md pt-24 pb-10">
+        <div className="relative z-10 bg-slate-50 border-b border-slate-200 backdrop-blur-md pt-24 pb-10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100 }}
-              className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2"
+              className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2"
             >
-              My <span className="text-gradient">Applications</span>
+              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Applications</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, type: "spring", stiffness: 100 }}
-              className="text-apple-text-secondary text-lg font-medium"
+              className="text-slate-500 text-lg font-medium"
             >
               Track and manage all your project applications in one place.
             </motion.p>
@@ -168,25 +169,25 @@ const MyApplications = () => {
                   label: "Total",
                   val: counts.all,
                   color:
-                    "bg-white/10 text-white border border-white/20 shadow-md",
+                    "bg-slate-100 text-slate-900 border border-slate-300 shadow-md",
                 },
                 {
                   label: "Pending",
                   val: counts.pending,
                   color:
-                    "bg-apple-warning/10 text-apple-warning border border-apple-warning/20 shadow-sm",
+                    "bg-orange-50 text-orange-600 border border-orange-200 shadow-sm",
                 },
                 {
                   label: "Selected",
                   val: counts.selected,
                   color:
-                    "bg-apple-blue/10 text-apple-blue border border-apple-blue/20 shadow-sm",
+                    "bg-blue-50 text-blue-600 border border-blue-200 shadow-sm",
                 },
                 {
                   label: "Rejected",
                   val: counts.rejected,
                   color:
-                    "bg-apple-error/10 text-apple-error border border-apple-error/20 shadow-sm",
+                    "bg-red-50 text-red-500 border border-red-200 shadow-sm",
                 },
               ].map((s) => (
                 <div
@@ -216,15 +217,15 @@ const MyApplications = () => {
                   onClick={() => setFilter(tab.key)}
                   className={`relative whitespace-nowrap px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
                     filter === tab.key
-                      ? "text-white bg-white/10"
-                      : "text-apple-text-secondary hover:text-white bg-transparent"
+                      ? "text-slate-900 bg-slate-100"
+                      : "text-slate-500 hover:text-slate-900 bg-transparent"
                   }`}
                 >
                   {tab.label}
                   {filter === tab.key && (
                     <motion.div
                       layoutId="app-filter-tab"
-                      className="absolute inset-0 rounded-xl bg-white/10 border border-white/20 -z-10"
+                      className="absolute inset-0 rounded-xl bg-slate-100 border border-slate-300 -z-10"
                     />
                   )}
                 </button>
@@ -238,7 +239,7 @@ const MyApplications = () => {
           {loading ? (
             <div className="space-y-4">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="liquid-glass-card rounded-3xl p-6">
+                <div key={i} className="bg-white shadow-md rounded-xl p-6">
                   <div className="flex gap-4 items-start">
                     <Skeleton className="w-12 h-12 rounded-xl" />
                     <div className="flex-1 space-y-3 mt-1">
@@ -266,7 +267,7 @@ const MyApplications = () => {
               action={
                 <Link
                   to="/explore"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-apple-btn text-white text-base font-bold rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] group hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 text-white text-base font-bold rounded-xl hover:opacity-90 transition-all shadow-sm group hover:-translate-y-0.5"
                 >
                   Browse Projects{" "}
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -292,26 +293,26 @@ const MyApplications = () => {
                     >
                       <Link
                         to={`/projects/${app.project?._id}`}
-                        className="block liquid-glass-card rounded-3xl p-6 hover:-translate-y-1 transition-all group relative overflow-hidden"
+                        className="block bg-white shadow-md rounded-xl p-6 hover:-translate-y-1 transition-all group relative overflow-hidden"
                       >
                         <div
                           className={`absolute top-0 left-0 w-1 h-full ${statusMeta.dotColor}`}
                         ></div>
                         <div className="flex items-start gap-5 pl-2">
                           {/* Type indicator */}
-                          <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl bg-white/5 border border-white/10 shrink-0 shadow-sm">
+                          <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl bg-slate-50 border border-slate-200 shrink-0 shadow-sm">
                             {typeMeta.badge}
                           </div>
 
                           <div className="flex-1 min-w-0">
                             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                               <div>
-                                <h3 className="text-lg font-extrabold text-white group-hover:text-apple-blue transition-colors truncate">
+                                <h3 className="text-lg font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
                                   {app.project?.title || "Project"}
                                 </h3>
-                                <p className="text-sm font-semibold text-apple-text-secondary mt-1">
+                                <p className="text-sm font-semibold text-slate-500 mt-1">
                                   Applied for:{" "}
-                                  <span className="text-white">
+                                  <span className="text-slate-900">
                                     {app.roleName}
                                   </span>
                                 </p>
@@ -331,7 +332,7 @@ const MyApplications = () => {
 
                             {/* Host (project creator) avatar + name */}
                             {app.project?.createdBy && (
-                              <div className="flex items-center gap-2 mb-4 bg-white/5 inline-flex px-3 py-1.5 rounded-lg border border-white/10">
+                              <div className="flex items-center gap-2 mb-4 bg-slate-50 inline-flex px-3 py-1.5 rounded-lg border border-slate-200">
                                 {app.project.createdBy.profilePic &&
                                 !app.project.createdBy.profilePic.includes(
                                   "via.placeholder.com",
@@ -339,17 +340,17 @@ const MyApplications = () => {
                                   <img
                                     src={app.project.createdBy.profilePic}
                                     alt={app.project.createdBy.name}
-                                    className="w-6 h-6 rounded-md object-cover border border-white/20 shrink-0 shadow-sm"
+                                    className="w-6 h-6 rounded-md object-cover border border-slate-300 shrink-0 shadow-sm"
                                   />
                                 ) : (
-                                  <div className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-[10px] font-bold shrink-0 shadow-sm">
+                                  <div className="w-6 h-6 rounded-md bg-slate-100 flex items-center justify-center text-slate-900 text-[10px] font-bold shrink-0 shadow-sm">
                                     {app.project.createdBy.name?.[0]?.toUpperCase() ||
                                       "?"}
                                   </div>
                                 )}
-                                <span className="text-xs font-semibold text-apple-text-secondary">
+                                <span className="text-xs font-semibold text-slate-500">
                                   by{" "}
-                                  <span className="text-white">
+                                  <span className="text-slate-900">
                                     {app.project.createdBy.name}
                                   </span>
                                 </span>
@@ -362,18 +363,18 @@ const MyApplications = () => {
                               >
                                 {typeMeta.label}
                               </span>
-                              <span className="text-xs font-semibold text-apple-text-secondary flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1 rounded-md shadow-sm">
+                              <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-md shadow-sm">
                                 <Calendar className="w-3.5 h-3.5" />
                                 {timeAgo(app.createdAt)}
                               </span>
                             </div>
 
                             {app.coverLetter && (
-                              <div className="mt-4 bg-white/5 border border-white/10 p-3 rounded-xl relative">
-                                <div className="absolute top-3 left-3 text-white/20 text-2xl font-serif">
+                              <div className="mt-4 bg-slate-50 border border-slate-200 p-3 rounded-xl relative">
+                                <div className="absolute top-3 left-3 text-slate-200 text-2xl font-serif">
                                   "
                                 </div>
-                                <p className="text-sm font-medium text-apple-text-secondary pl-6 italic line-clamp-2">
+                                <p className="text-sm font-medium text-slate-500 pl-6 italic line-clamp-2">
                                   {app.coverLetter}
                                 </p>
                               </div>
@@ -381,7 +382,7 @@ const MyApplications = () => {
 
                             {app.interviewSubmitted && (
                               <div className="mt-4">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-400 text-xs font-bold rounded-lg border border-emerald-500/20 shadow-sm">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 text-xs font-bold rounded-lg border border-emerald-500/20 shadow-sm">
                                   <CheckCircle2 className="w-4 h-4" /> Interview
                                   Submitted
                                 </span>
@@ -390,8 +391,8 @@ const MyApplications = () => {
                           </div>
 
                           <div className="shrink-0 pt-2 hidden sm:block">
-                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-apple-blue/10 group-hover:border-apple-blue/20 transition-colors">
-                              <ArrowUpRight className="w-5 h-5 text-apple-text-secondary group-hover:text-apple-blue transition-colors" />
+                            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors">
+                              <ArrowUpRight className="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors" />
                             </div>
                           </div>
                         </div>
@@ -409,3 +410,6 @@ const MyApplications = () => {
 };
 
 export default MyApplications;
+
+
+

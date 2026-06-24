@@ -10,22 +10,22 @@ import EmptyState from "../../Components/States/EmptyState";
 const TYPE_META = {
   capstone: {
     label: "Capstone",
-    color: "bg-apple-blue/10 text-apple-blue border-apple-blue/20",
+    color: "bg-blue-50 text-blue-600 border-blue-200",
     accent: "bg-apple-blue",
   },
   hackathon: {
     label: "Hackathon",
-    color: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    color: "bg-purple-50 text-purple-600 border-purple-200",
     accent: "bg-purple-600",
   },
   group: {
     label: "Community",
-    color: "bg-white/5 text-white border-white/10",
+    color: "bg-slate-100 text-slate-600 border-slate-200",
     accent: "bg-slate-600",
   },
   freelancing: {
     label: "Freelancing",
-    color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    color: "bg-emerald-50 text-emerald-600 border-emerald-200",
     accent: "bg-emerald-600",
   },
 };
@@ -46,7 +46,8 @@ const timeAgo = (dateStr) => {
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 7) return `${days} days ago`;
-  return new Date(dateStr).toLocaleDateString("en-US", {
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata",
     month: "short",
     day: "numeric",
   });
@@ -72,21 +73,21 @@ const ProjectCard = ({ project, index }) => {
     >
       <Link
         to={`/projects/${project._id}`}
-        className="group flex flex-col liquid-glass-card rounded-2xl overflow-hidden relative h-[380px]"
+        className="group flex flex-col bg-white border border-slate-200 shadow-md rounded-2xl overflow-hidden relative h-[380px] hover:shadow-lg transition-all"
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-apple-blue to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div className="p-6 flex-1 flex flex-col gap-4">
           {/* Header row */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-white/5 border border-white/10 shadow-sm group-hover:bg-apple-blue/10 transition-colors duration-300">
-                <Icon className="w-6 h-6 text-apple-text-secondary group-hover:text-apple-blue transition-colors" />
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-slate-50 border border-slate-200 shadow-sm group-hover:bg-blue-50 transition-colors duration-300">
+                <Icon className="w-6 h-6 text-slate-500 group-hover:text-apple-blue transition-colors" />
               </div>
               <div>
-                <h3 className="text-lg font-extrabold text-white leading-tight group-hover:text-apple-blue transition-colors line-clamp-1">
+                <h3 className="text-lg font-extrabold text-slate-900 leading-tight group-hover:text-apple-blue transition-colors line-clamp-1">
                   {project.title}
                 </h3>
-                <p className="text-[10px] font-bold text-apple-text-secondary mt-1 uppercase tracking-widest">
+                <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">
                   {project.createdBy?.name || "Company / Creator"}
                 </p>
               </div>
@@ -99,7 +100,7 @@ const ProjectCard = ({ project, index }) => {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-apple-text-secondary leading-relaxed line-clamp-2 mt-2 flex-1 font-medium">
+          <p className="text-sm text-slate-500 leading-relaxed line-clamp-2 mt-2 flex-1 font-medium">
             {project.description}
           </p>
 
@@ -109,13 +110,13 @@ const ProjectCard = ({ project, index }) => {
               {project.tags.slice(0, 3).map((tag, i) => (
                 <span
                   key={i}
-                  className="text-[11px] px-2.5 py-1 bg-white/5 border border-white/10 text-apple-text-secondary rounded-md font-semibold group-hover:bg-white/10 transition-colors"
+                  className="text-[11px] px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-600 rounded-md font-semibold group-hover:bg-slate-100 transition-colors"
                 >
                   {tag}
                 </span>
               ))}
               {project.tags.length > 3 && (
-                <span className="text-[11px] px-2.5 py-1 text-apple-text-secondary font-bold bg-transparent border border-transparent rounded-md">
+                <span className="text-[11px] px-2.5 py-1 text-slate-500 font-bold bg-transparent border border-transparent rounded-md">
                   +{project.tags.length - 3}
                 </span>
               )}
@@ -123,20 +124,19 @@ const ProjectCard = ({ project, index }) => {
           )}
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 bg-white/5 backdrop-blur-md border-t border-white/5 flex items-center justify-between mt-auto group-hover:bg-apple-blue/5 transition-colors">
-          <span className="text-xs font-bold flex items-center gap-1.5 text-apple-text-secondary">
+        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between mt-auto group-hover:bg-blue-50/50 transition-colors">
+          <span className="text-xs font-bold flex items-center gap-1.5 text-slate-500">
             <Users className="w-4 h-4" />
             {slots > 0 ? (
               <>
-                <span className="text-emerald-400">{slots} slots left</span> of{" "}
+                <span className="text-emerald-600">{slots} slots left</span> of{" "}
                 {project.totalMembers}
               </>
             ) : (
               <span className="text-slate-500">Team Full</span>
             )}
           </span>
-          <span className="text-[11px] font-bold text-apple-text-secondary flex items-center gap-1">
+          <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
             {timeAgo(project.createdAt)}
           </span>
         </div>
@@ -204,8 +204,7 @@ const Explore = () => {
   return (
     <Layout>
       <div className="min-h-screen relative overflow-hidden transition-colors duration-300 pb-20">
-        {/* Header Section */}
-        <div className="relative z-10 border-b border-white/10 bg-white/5 backdrop-blur-md pt-36 pb-8">
+        <div className="relative z-10 border-b border-slate-200 bg-white/50 backdrop-blur-md pt-36 pb-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -213,16 +212,16 @@ const Explore = () => {
               transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
               className="max-w-3xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full liquid-glass border border-apple-glass-border mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 mb-6">
                 <Rocket className="w-4 h-4 text-apple-blue" />
                 <span className="text-xs font-bold text-apple-blue uppercase tracking-wider">
                   Discover
                 </span>
               </div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-                Explore <span className="text-gradient">Opportunities</span>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
+                Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-apple-blue to-indigo-600">Opportunities</span>
               </h1>
-              <p className="text-apple-text-secondary text-lg sm:text-xl font-medium max-w-2xl">
+              <p className="text-slate-500 text-lg sm:text-xl font-medium max-w-2xl">
                 Find the perfect team to join. Browse active projects,
                 capstones, and freelance gigs directly matched to your skills.
               </p>
@@ -240,14 +239,14 @@ const Explore = () => {
               }}
               className="mt-10 flex flex-col sm:flex-row items-center gap-4 max-w-4xl"
             >
-              <div className="flex-1 w-full flex items-center gap-3 liquid-glass rounded-2xl px-5 py-4 focus-within:border-apple-blue focus-within:ring-2 focus-within:ring-apple-blue/20 transition-all">
-                <Search className="w-6 h-6 text-apple-text-secondary shrink-0" />
+              <div className="flex-1 w-full flex items-center gap-3 bg-white border border-slate-200 shadow-sm rounded-2xl px-5 py-4 focus-within:border-apple-blue focus-within:ring-2 focus-within:ring-apple-blue/20 transition-all">
+                <Search className="w-6 h-6 text-slate-500 shrink-0" />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by title, skill, or keyword..."
-                  className="bg-transparent text-base flex-1 outline-none text-white placeholder-apple-text-secondary font-semibold"
+                  className="bg-transparent text-base flex-1 outline-none text-slate-900 placeholder-slate-400 font-semibold"
                 />
                 <AnimatePresence>
                   {search && (
@@ -256,7 +255,7 @@ const Explore = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
                       onClick={() => setSearch("")}
-                      className="text-apple-text-secondary hover:text-white bg-white/10 p-1.5 rounded-full transition-colors"
+                      className="text-slate-400 hover:text-slate-900 bg-slate-100 p-1.5 rounded-full transition-colors"
                     >
                       <X className="w-4 h-4" />
                     </motion.button>
@@ -266,10 +265,10 @@ const Explore = () => {
               {localStorage.getItem("role") === "creator" ||
               localStorage.getItem("role") === "admin" ? (
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ y: 0 }}
                   onClick={() => navigate("/create-project")}
-                  className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-8 py-4 bg-white text-apple-bg text-base font-bold rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all"
+                  className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-8 py-4 bg-slate-900 text-white text-base font-bold rounded-2xl shadow-md hover:bg-slate-800 transition-all"
                 >
                   Post a job
                 </motion.button>
@@ -286,7 +285,7 @@ const Explore = () => {
                 type: "spring",
                 stiffness: 100,
               }}
-              className="mt-8 flex items-center gap-2 overflow-x-auto pb-2 hide-scrollbar border-b border-white/10"
+              className="mt-8 flex items-center gap-2 overflow-x-auto pb-2 hide-scrollbar border-b border-slate-200"
             >
               {tabs.map((tab) => (
                 <button
@@ -295,7 +294,7 @@ const Explore = () => {
                   className={`relative whitespace-nowrap px-5 py-3 text-sm font-bold transition-colors ${
                     activeType === tab.key
                       ? "text-apple-blue"
-                      : "text-apple-text-secondary hover:text-white"
+                      : "text-slate-500 hover:text-slate-900"
                   }`}
                 >
                   {tab.label}
@@ -331,10 +330,10 @@ const Explore = () => {
               action={
                 search && (
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
                     onClick={() => setSearch("")}
-                    className="mt-4 px-6 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors shadow-md border border-white/20"
+                    className="mt-4 px-6 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-50 transition-colors shadow-sm border border-slate-200"
                   >
                     Clear filters
                   </motion.button>
@@ -348,9 +347,9 @@ const Explore = () => {
                 animate={{ opacity: 1 }}
                 className="mb-8 flex items-center justify-between"
               >
-                <p className="text-sm font-semibold text-apple-text-secondary uppercase tracking-wider">
+                <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
                   Showing{" "}
-                  <span className="text-white font-bold px-2.5 py-1 bg-white/10 border border-white/20 rounded-md mx-1 shadow-sm">
+                  <span className="text-slate-900 font-bold px-2.5 py-1 bg-white border border-slate-200 rounded-md mx-1 shadow-sm">
                     {filtered.length}
                   </span>{" "}
                   result{filtered.length !== 1 ? "s" : ""}
@@ -376,3 +375,5 @@ const Explore = () => {
 };
 
 export default Explore;
+
+

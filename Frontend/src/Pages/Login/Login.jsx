@@ -84,7 +84,7 @@ const FloatingShapes = () => {
         return (
           <motion.div
             key={i}
-            className="absolute bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
+            className="absolute bg-white border border-slate-200 rounded-xl flex items-center justify-center shadow-md"
             style={{
               width: s.width,
               height: s.height,
@@ -171,15 +171,14 @@ const Login = () => {
           transition={{ type: "spring", stiffness: 100 }}
           className="relative z-10 w-full max-w-[420px]"
         >
-          {/* Form Card */}
-          <div className="liquid-glass-card rounded-[2rem] p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/20 blur-[50px] pointer-events-none"></div>
+          <div className="bg-white border border-slate-200 shadow-lg rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/10 blur-[50px] pointer-events-none"></div>
 
             {/* Header */}
             <div className="text-center mb-6 relative z-10">
               <Link
                 to="/"
-                className="inline-flex items-center justify-center w-12 h-12 bg-white/5 rounded-2xl mb-4 shadow-sm border border-white/10 group"
+                className="inline-flex items-center justify-center w-12 h-12 bg-slate-50 rounded-2xl mb-4 shadow-sm border border-slate-200 group"
               >
                 <img
                   src={logo}
@@ -187,10 +186,10 @@ const Login = () => {
                   className="w-8 h-8 object-cover rounded-xl group-hover:scale-105 transition-transform"
                 />
               </Link>
-              <h1 className="text-3xl font-extrabold text-white tracking-tight mb-2">
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
                 Welcome back
               </h1>
-              <p className="text-sm text-apple-text-secondary font-medium">
+              <p className="text-sm text-slate-500 font-medium">
                 Please enter your details to sign in.
               </p>
             </div>
@@ -198,11 +197,11 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
               {/* Email Field */}
               <div>
-                <label className="block text-sm font-bold text-apple-text-secondary mb-2">
+                <label className="block text-sm font-bold text-slate-500 mb-2">
                   Email Address
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-slate-400">
                     <Mail className="w-5 h-5" />
                   </div>
                   <input
@@ -210,7 +209,7 @@ const Login = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-slate-400 font-medium text-slate-900 shadow-sm"
                     placeholder="Enter your email"
                     required
                   />
@@ -219,11 +218,11 @@ const Login = () => {
 
               {/* Password Field */}
               <div>
-                <label className="block text-sm font-bold text-apple-text-secondary mb-2">
+                <label className="block text-sm font-bold text-slate-500 mb-2">
                   Password
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-slate-400">
                     <Lock className="w-5 h-5" />
                   </div>
                   <input
@@ -231,7 +230,7 @@ const Login = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-slate-400 font-medium text-slate-900 shadow-sm"
                     placeholder="••••••••"
                     required
                   />
@@ -239,7 +238,7 @@ const Login = () => {
                 <div className="flex justify-end mt-2">
                   <Link
                     to="/forgot-password"
-                    className="text-xs font-bold text-apple-blue hover:text-white transition-colors"
+                    className="text-xs font-bold text-apple-blue hover:text-slate-900 transition-colors"
                   >
                     Forgot password?
                   </Link>
@@ -248,13 +247,13 @@ const Login = () => {
 
               {/* Submit Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full mt-4 bg-apple-btn text-white py-3.5 rounded-2xl font-bold text-base hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_20px_rgba(59,130,246,0.3)] overflow-hidden"
+                className="group relative w-full mt-4 bg-slate-900 text-white py-3.5 rounded-2xl font-bold text-base hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-md overflow-hidden"
               >
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                <div className="absolute inset-0 w-full h-full hidden"></div>
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin mr-2" /> Signing
@@ -270,11 +269,11 @@ const Login = () => {
             </form>
 
             {/* Register Link */}
-            <p className="text-center text-sm text-apple-text-secondary mt-6 pt-5 border-t border-white/10 relative z-10">
+            <p className="text-center text-sm text-slate-500 mt-6 pt-5 border-t border-slate-200 relative z-10">
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className="font-bold text-white hover:text-apple-blue transition-colors"
+                className="font-bold text-slate-900 hover:text-apple-blue transition-colors"
               >
                 Sign up
               </Link>
@@ -284,7 +283,7 @@ const Login = () => {
 
         {/* Minimal Footer */}
         <div className="absolute bottom-6 left-0 right-0 text-center z-10">
-          <p className="text-xs font-medium text-apple-text-secondary/60">
+          <p className="text-xs font-medium text-slate-500/60">
             © 2026 CrewNex Inc. All rights reserved.
           </p>
         </div>

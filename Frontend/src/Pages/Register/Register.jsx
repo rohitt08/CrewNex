@@ -87,7 +87,7 @@ const FloatingShapes = () => {
         return (
           <motion.div
             key={i}
-            className="absolute bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
+            className="absolute bg-white border border-slate-200 rounded-xl flex items-center justify-center shadow-md"
             style={{
               width: s.width,
               height: s.height,
@@ -177,8 +177,8 @@ const Register = () => {
       <div className="min-h-screen pt-32 pb-20 flex items-start justify-center relative overflow-hidden px-4 font-sans">
         {/* Animated Background Blobs & Shapes */}
         <FloatingShapes />
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-apple-blue/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-apple-blue/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -187,14 +187,14 @@ const Register = () => {
           className="relative z-10 w-full max-w-[480px]"
         >
           {/* Form Card */}
-          <div className="liquid-glass-card rounded-[2rem] p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 blur-[50px] pointer-events-none"></div>
+          <div className="bg-white border border-slate-200 shadow-lg rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/10 blur-[50px] pointer-events-none"></div>
 
             {/* Header */}
             <div className="text-center mb-6 relative z-10">
               <Link
                 to="/"
-                className="inline-flex items-center justify-center w-12 h-12 bg-white/5 rounded-2xl mb-4 shadow-sm border border-white/10 group"
+                className="inline-flex items-center justify-center w-12 h-12 bg-slate-50 rounded-2xl mb-4 shadow-sm border border-slate-200 group"
               >
                 <img
                   src={logo}
@@ -202,10 +202,10 @@ const Register = () => {
                   className="w-8 h-8 object-cover rounded-xl group-hover:scale-105 transition-transform"
                 />
               </Link>
-              <h1 className="text-3xl font-extrabold text-white tracking-tight mb-2">
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
                 Get started
               </h1>
-              <p className="text-sm text-apple-text-secondary font-medium">
+              <p className="text-sm text-slate-500 font-medium">
                 Join us to launch your next idea or find a team to build with.
               </p>
             </div>
@@ -213,11 +213,11 @@ const Register = () => {
             <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
               {/* Name Field */}
               <div>
-                <label className="block text-sm font-bold text-apple-text-secondary mb-2">
+                <label className="block text-sm font-bold text-slate-500 mb-2">
                   Full Name
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-slate-400">
                     <User className="w-5 h-5" />
                   </div>
                   <input
@@ -225,7 +225,7 @@ const Register = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-slate-400 font-medium text-slate-900 shadow-sm"
                     placeholder="Enter your name"
                     required
                   />
@@ -234,11 +234,11 @@ const Register = () => {
 
               {/* Email Field */}
               <div>
-                <label className="block text-sm font-bold text-apple-text-secondary mb-2">
+                <label className="block text-sm font-bold text-slate-500 mb-2">
                   Email Address
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-slate-400">
                     <Mail className="w-5 h-5" />
                   </div>
                   <input
@@ -246,7 +246,7 @@ const Register = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-slate-400 font-medium text-slate-900 shadow-sm"
                     placeholder="Enter your email"
                     required
                   />
@@ -255,11 +255,11 @@ const Register = () => {
 
               {/* Password Field */}
               <div>
-                <label className="block text-sm font-bold text-apple-text-secondary mb-2">
+                <label className="block text-sm font-bold text-slate-500 mb-2">
                   Password
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-white/70">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-apple-blue text-slate-400">
                     <Lock className="w-5 h-5" />
                   </div>
                   <input
@@ -267,7 +267,7 @@ const Register = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-white/60 font-medium text-white shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-apple-blue focus:border-apple-blue transition-all placeholder-slate-400 font-medium text-slate-900 shadow-sm"
                     placeholder="Create a password"
                     required
                   />
@@ -276,19 +276,19 @@ const Register = () => {
 
               {/* Role Selection */}
               <div>
-                <label className="block text-sm font-bold text-apple-text-secondary mb-3">
+                <label className="block text-sm font-bold text-slate-500 mb-3">
                   I want to...
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
                     type="button"
                     onClick={() => setFormData({ ...formData, role: "seeker" })}
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all ${
                       formData.role === "seeker"
-                        ? "border-apple-blue bg-apple-blue/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-                        : "border-white/10 hover:border-white/20 bg-white/5 text-white/80 hover:text-white"
+                        ? "border-apple-blue bg-blue-50 text-apple-blue shadow-sm"
+                        : "border-slate-200 hover:border-slate-300 bg-white text-slate-500 hover:text-slate-900"
                     }`}
                   >
                     <GraduationCap
@@ -298,16 +298,16 @@ const Register = () => {
                   </motion.button>
 
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
                     type="button"
                     onClick={() =>
                       setFormData({ ...formData, role: "creator" })
                     }
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all ${
                       formData.role === "creator"
-                        ? "border-purple-500 bg-purple-500/20 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]"
-                        : "border-white/10 hover:border-white/20 bg-white/5 text-white/80 hover:text-white"
+                        ? "border-purple-500 bg-purple-50 text-purple-600 shadow-sm"
+                        : "border-slate-200 hover:border-slate-300 bg-white text-slate-500 hover:text-slate-900"
                     }`}
                   >
                     <Briefcase
@@ -320,13 +320,13 @@ const Register = () => {
 
               {/* Submit Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full mt-4 bg-apple-btn text-white py-3.5 rounded-2xl font-bold text-base hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_20px_rgba(59,130,246,0.3)] overflow-hidden"
+                className="group relative w-full mt-4 bg-slate-900 text-white py-3.5 rounded-2xl font-bold text-base hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-md overflow-hidden"
               >
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                <div className="absolute inset-0 w-full h-full hidden "></div>
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin mr-2" /> Creating
@@ -342,11 +342,11 @@ const Register = () => {
             </form>
 
             {/* Login Link */}
-            <p className="text-center text-sm text-apple-text-secondary mt-6 pt-5 border-t border-white/10 relative z-10">
+            <p className="text-center text-sm text-slate-500 mt-6 pt-5 border-t border-slate-200 relative z-10">
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-bold text-white hover:text-apple-blue transition-colors"
+                className="font-bold text-slate-900 hover:text-apple-blue transition-colors"
               >
                 Sign in
               </Link>
@@ -356,7 +356,7 @@ const Register = () => {
 
         {/* Minimal Footer */}
         <div className="absolute bottom-4 left-0 right-0 text-center z-10">
-          <p className="text-xs font-medium text-apple-text-secondary/60">
+          <p className="text-xs font-medium text-slate-500/60">
             © 2026 CrewNex Inc. All rights reserved.
           </p>
         </div>
@@ -371,3 +371,5 @@ const Register = () => {
 };
 
 export default Register;
+
+

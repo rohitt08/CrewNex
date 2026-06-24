@@ -24,12 +24,12 @@ import PageLoader from "../../Components/Loading/PageLoader";
 const ScoreBadge = ({ score }) => {
   const color =
     score >= 80
-      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+      ? "bg-emerald-100 text-emerald-600 border border-emerald-300"
       : score >= 60
-        ? "bg-apple-blue/20 text-apple-blue border border-apple-blue/30"
+        ? "bg-apple-blue/20 text-blue-600 border border-blue-300"
         : score >= 40
           ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-          : "bg-apple-error/20 text-apple-error border border-apple-error/30";
+          : "bg-apple-error/20 text-red-500 border border-apple-error/30";
   const label =
     score >= 80
       ? "Excellent"
@@ -154,7 +154,7 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="liquid-glass-card rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-all flex flex-col group relative overflow-hidden"
+      className="bg-white border border-slate-200 shadow-md rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col group relative overflow-hidden"
     >
       <div className="flex flex-col md:flex-row gap-6 w-full relative z-10">
         {/* Profile Detail */}
@@ -167,30 +167,30 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
             !applicant.profilePic.includes("via.placeholder.com") ? (
               <img
                 src={applicant.profilePic}
-                className="w-16 h-16 rounded-2xl border border-white/20 shadow-sm object-cover"
+                className="w-16 h-16 rounded-2xl border border-slate-300 shadow-sm object-cover"
                 alt="Avatar"
               />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white font-extrabold text-2xl shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-900 font-extrabold text-2xl shadow-sm">
                 {applicant.name?.[0]?.toUpperCase() || "?"}
               </div>
             )}
-            <div className="absolute -bottom-2 -right-2 bg-white/10 backdrop-blur-md rounded-lg p-1 shadow-sm border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
-              <ArrowUpRight className="w-3 h-3 text-apple-blue" />
+            <div className="absolute -bottom-2 -right-2 bg-slate-100 backdrop-blur-md rounded-lg p-1 shadow-sm border border-slate-300 opacity-0 group-hover:opacity-100 transition-opacity">
+              <ArrowUpRight className="w-3 h-3 text-blue-600" />
             </div>
           </Link>
           <div className="min-w-0 pt-1">
             <Link
               to={`/profile/${applicant._id || ""}`}
-              className="font-extrabold text-white text-xl hover:text-apple-blue transition-colors truncate block"
+              className="font-extrabold text-slate-900 text-xl hover:text-blue-600 transition-colors truncate block"
             >
               {applicant.name || "Unknown"}
             </Link>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-bold text-apple-text-secondary uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Role:
               </span>
-              <span className="text-sm font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-md border border-white/10">
+              <span className="text-sm font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
                 {app.roleName}
               </span>
             </div>
@@ -199,7 +199,7 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
                 href={app.resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-apple-blue font-bold hover:text-apple-blue/80 transition-colors flex items-center gap-1.5 mt-3 w-max bg-apple-blue/10 px-3 py-1.5 rounded-lg border border-apple-blue/20"
+                className="text-xs text-blue-600 font-bold hover:text-blue-600/80 transition-colors flex items-center gap-1.5 mt-3 w-max bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200"
               >
                 <ExternalLink className="w-3.5 h-3.5" /> View Resume PDF
               </a>
@@ -208,28 +208,28 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
         </div>
 
         {/* Badges / Metrics */}
-        <div className="flex-1 flex flex-col justify-center gap-4 border-t md:border-t-0 md:border-l border-white/10 pt-5 md:pt-0 md:pl-6 min-w-0">
+        <div className="flex-1 flex flex-col justify-center gap-4 border-t md:border-t-0 md:border-l border-slate-200 pt-5 md:pt-0 md:pl-6 min-w-0">
           {analysis ? (
             <button
               onClick={() => setShowAnalysis(!showAnalysis)}
               className="text-left group/btn w-max flex flex-col items-start gap-1"
             >
-              <p className="text-[10px] font-bold text-apple-text-secondary uppercase tracking-widest flex items-center gap-1 group-hover/btn:text-apple-blue transition-colors">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1 group-hover/btn:text-blue-600 transition-colors">
                 <BrainCircuit className="w-3 h-3" /> AI Match Score
               </p>
               <ScoreBadge score={analysis.score} />
             </button>
           ) : (
             <div className="flex flex-col items-start gap-1.5">
-              <p className="text-[10px] font-bold text-apple-text-secondary uppercase tracking-widest flex items-center gap-1">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1">
                 <BrainCircuit className="w-3 h-3" /> AI Match Score
               </p>
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
                 onClick={handleAnalyze}
                 disabled={analyzing}
-                className="text-xs bg-apple-blue/10 text-apple-blue font-bold px-4 py-2 rounded-xl hover:bg-apple-blue/20 border border-apple-blue/30 transition-all flex items-center gap-2 shadow-sm w-max"
+                className="text-xs bg-blue-50 text-blue-600 font-bold px-4 py-2 rounded-xl hover:bg-apple-blue/20 border border-blue-300 transition-all flex items-center gap-2 shadow-sm w-max"
               >
                 {analyzing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -246,11 +246,11 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
             <div className="flex gap-4">
               {app.assessmentSubmitted && app.assessmentScore != null && (
                 <div>
-                  <p className="text-[10px] font-bold text-apple-text-secondary mb-1.5 uppercase tracking-widest flex items-center gap-1">
+                  <p className="text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest flex items-center gap-1">
                     <ClipboardCheck className="w-3 h-3" /> Test Score
                   </p>
                   <span
-                    className={`inline-flex items-center justify-center text-xs font-bold px-3 py-1 rounded-lg shadow-sm border ${app.assessmentScore >= 75 ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : app.assessmentScore >= 50 ? "bg-apple-blue/20 text-apple-blue border-apple-blue/30" : "bg-apple-error/20 text-apple-error border-apple-error/30"}`}
+                    className={`inline-flex items-center justify-center text-xs font-bold px-3 py-1 rounded-lg shadow-sm border ${app.assessmentScore >= 75 ? "bg-emerald-100 text-emerald-600 border-emerald-300" : app.assessmentScore >= 50 ? "bg-apple-blue/20 text-blue-600 border-blue-300" : "bg-apple-error/20 text-red-500 border-apple-error/30"}`}
                   >
                     {app.assessmentScore}%
                   </span>
@@ -258,11 +258,11 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
               )}
               {app.interviewSubmitted && app.interviewScore != null && (
                 <div>
-                  <p className="text-[10px] font-bold text-apple-text-secondary mb-1.5 uppercase tracking-widest flex items-center gap-1">
+                  <p className="text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest flex items-center gap-1">
                     <MessageSquare className="w-3 h-3" /> Interview Score
                   </p>
                   <span
-                    className={`inline-flex items-center justify-center text-xs font-bold px-3 py-1 rounded-lg shadow-sm border ${app.interviewScore >= 75 ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : app.interviewScore >= 50 ? "bg-apple-blue/20 text-apple-blue border-apple-blue/30" : "bg-apple-error/20 text-apple-error border-apple-error/30"}`}
+                    className={`inline-flex items-center justify-center text-xs font-bold px-3 py-1 rounded-lg shadow-sm border ${app.interviewScore >= 75 ? "bg-emerald-100 text-emerald-600 border-emerald-300" : app.interviewScore >= 50 ? "bg-apple-blue/20 text-blue-600 border-blue-300" : "bg-apple-error/20 text-red-500 border-apple-error/30"}`}
                   >
                     {app.interviewScore}%
                   </span>
@@ -273,26 +273,26 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col gap-3 shrink-0 md:w-56 border-t md:border-t-0 md:border-l border-white/10 pt-5 md:pt-0 md:pl-6 justify-center">
+        <div className="flex flex-col gap-3 shrink-0 md:w-56 border-t md:border-t-0 md:border-l border-slate-200 pt-5 md:pt-0 md:pl-6 justify-center">
           {app.status === "pending" && (
             <div className="flex flex-col gap-2 w-full">
               {updating ? (
-                <Loader2 className="w-6 h-6 animate-spin mx-auto text-apple-blue" />
+                <Loader2 className="w-6 h-6 animate-spin mx-auto text-blue-600" />
               ) : (
                 <>
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
                     onClick={() => handleStatus("accepted")}
-                    className="w-full py-2.5 bg-apple-btn text-white text-sm font-bold rounded-xl shadow-[0_4px_15px_rgba(59,130,246,0.3)] flex items-center justify-center gap-2"
+                    className="w-full py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl shadow-sm flex items-center justify-center gap-2"
                   >
                     Shortlist for Test
                   </motion.button>
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
                     onClick={() => handleStatus("rejected")}
-                    className="w-full py-2.5 bg-white/5 border border-white/10 text-white hover:bg-apple-error/20 hover:text-apple-error hover:border-apple-error/30 text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2"
+                    className="w-full py-2.5 bg-slate-50 border border-slate-200 text-slate-900 hover:bg-apple-error/20 hover:text-red-500 hover:border-apple-error/30 text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2"
                   >
                     Reject
                   </motion.button>
@@ -303,7 +303,7 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
 
           {app.status === "accepted" && (
             <div className="text-center w-full space-y-3">
-              <span className="inline-block bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-4 py-1.5 font-bold rounded-lg w-full shadow-sm">
+              <span className="inline-block bg-emerald-50 text-emerald-600 border border-emerald-200 text-xs px-4 py-1.5 font-bold rounded-lg w-full shadow-sm">
                 Shortlisted for Test
               </span>
               {app.assessmentSubmitted && (
@@ -314,8 +314,8 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
                   disabled={updating || app.assessmentScore < 60}
                   className={`w-full text-sm px-4 py-2.5 font-bold rounded-xl transition-all shadow-sm flex items-center justify-center ${
                     app.assessmentScore >= 60
-                      ? "bg-apple-btn text-white"
-                      : "bg-white/5 text-white/80 cursor-not-allowed border border-white/10"
+                      ? "bg-slate-900 text-white"
+                      : "bg-slate-50 text-slate-600 cursor-not-allowed border border-slate-200"
                   }`}
                   title={
                     app.assessmentScore < 60
@@ -331,15 +331,15 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
 
           {app.status === "interview_invited" && (
             <div className="text-center w-full space-y-3">
-              <span className="inline-block bg-apple-blue/10 text-apple-blue border border-apple-blue/20 text-xs px-4 py-1.5 font-bold rounded-lg w-full shadow-sm">
+              <span className="inline-block bg-blue-50 text-blue-600 border border-blue-200 text-xs px-4 py-1.5 font-bold rounded-lg w-full shadow-sm">
                 Shortlisted for Interview
               </span>
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
                 onClick={handleSelect}
                 disabled={updating}
-                className="w-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm px-4 py-2.5 font-bold rounded-xl transition-all flex items-center justify-center gap-2 hover:bg-emerald-500/30"
+                className="w-full bg-emerald-100 border border-emerald-300 text-emerald-600 text-sm px-4 py-2.5 font-bold rounded-xl transition-all flex items-center justify-center gap-2 hover:bg-emerald-500/30"
               >
                 Select Candidate
               </motion.button>
@@ -348,7 +348,7 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
 
           {app.status === "selected" && (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="inline-flex items-center justify-center gap-2 border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-sm px-6 py-3 font-extrabold rounded-2xl shadow-sm w-full text-center">
+              <span className="inline-flex items-center justify-center gap-2 border border-emerald-200 bg-emerald-50 text-emerald-600 text-sm px-6 py-3 font-extrabold rounded-2xl shadow-sm w-full text-center">
                 <CheckCircle2 className="w-5 h-5" /> Selected
               </span>
             </div>
@@ -356,7 +356,7 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
 
           {app.status === "rejected" && (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="inline-flex items-center justify-center gap-2 bg-apple-error/10 text-apple-error border border-apple-error/20 text-sm px-6 py-3 font-extrabold rounded-2xl shadow-sm w-full text-center">
+              <span className="inline-flex items-center justify-center gap-2 bg-red-50 text-red-500 border border-red-200 text-sm px-6 py-3 font-extrabold rounded-2xl shadow-sm w-full text-center">
                 <XCircle className="w-5 h-5" /> Rejected
               </span>
             </div>
@@ -371,29 +371,29 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="w-full mt-6 bg-white/5 border border-white/10 rounded-2xl p-6 relative overflow-hidden"
+            className="w-full mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-6 relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/20 blur-[50px] rounded-full pointer-events-none"></div>
+            
 
-            <h4 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-apple-blue" /> AI Executive
+            <h4 className="text-slate-900 font-bold text-sm mb-3 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-600" /> AI Executive
               Summary
             </h4>
-            <p className="text-sm text-white/80 leading-relaxed mb-6 font-medium bg-white/5 p-4 rounded-xl border border-white/10">
+            <p className="text-sm text-slate-600 leading-relaxed mb-6 font-medium bg-slate-50 p-4 rounded-xl border border-slate-200">
               {analysis.summary}
             </p>
 
             <div className="grid md:grid-cols-2 gap-6">
               {analysis.strengths?.length > 0 && (
-                <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-xl">
-                  <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                  <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4" /> Strengths
                   </p>
                   <ul className="space-y-2">
                     {analysis.strengths.map((s, i) => (
                       <li
                         key={i}
-                        className="text-sm font-medium text-emerald-400/80 flex items-start gap-2"
+                        className="text-sm font-medium text-emerald-600/80 flex items-start gap-2"
                       >
                         <span className="text-emerald-500 mt-0.5">•</span>
                         {s}
@@ -403,17 +403,17 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
                 </div>
               )}
               {analysis.gaps?.length > 0 && (
-                <div className="bg-apple-warning/10 border border-apple-warning/20 p-4 rounded-xl">
-                  <p className="text-xs font-bold text-apple-warning uppercase tracking-widest mb-3 flex items-center gap-2">
+                <div className="bg-orange-50 border border-orange-200 p-4 rounded-xl">
+                  <p className="text-xs font-bold text-orange-600 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <XCircle className="w-4 h-4" /> Gaps
                   </p>
                   <ul className="space-y-2">
                     {analysis.gaps.map((g, i) => (
                       <li
                         key={i}
-                        className="text-sm font-medium text-apple-warning/80 flex items-start gap-2"
+                        className="text-sm font-medium text-orange-600/80 flex items-start gap-2"
                       >
-                        <span className="text-apple-warning mt-0.5">•</span>
+                        <span className="text-orange-600 mt-0.5">•</span>
                         {g}
                       </li>
                     ))}
@@ -422,11 +422,11 @@ const ApplicationRow = ({ app, onStatusChange, index }) => {
               )}
             </div>
             {app.interviewSubmitted && app.interviewSummary && (
-              <div className="mt-6 pt-6 border-t border-white/10">
-                <p className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <div className="mt-6 pt-6 border-t border-slate-200">
+                <p className="text-xs font-bold text-purple-600 uppercase tracking-widest mb-3 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4" /> Interview AI Feedback
                 </p>
-                <p className="text-sm text-purple-400/80 leading-relaxed font-medium bg-purple-500/10 border border-purple-500/20 p-4 rounded-xl">
+                <p className="text-sm text-purple-600/80 leading-relaxed font-medium bg-purple-50 border border-purple-200 p-4 rounded-xl">
                   {app.interviewSummary}
                 </p>
               </div>
@@ -523,10 +523,10 @@ const ManageProject = () => {
     <Layout>
       <div className="min-h-screen relative overflow-hidden pb-20 transition-colors duration-300">
         {/* Decorative Background */}
-        <div className="absolute top-0 right-0 w-1/2 h-96 bg-apple-blue/20 rounded-full blur-[100px] pointer-events-none"></div>
+        
 
         {/* Header Ribbon */}
-        <div className="relative z-10 bg-white/5 border-b border-white/10 backdrop-blur-md pt-24 pb-10">
+        <div className="relative z-10 bg-slate-50 border-b border-slate-200 backdrop-blur-md pt-24 pb-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -534,7 +534,7 @@ const ManageProject = () => {
             >
               <Link
                 to="/admin-dashboard"
-                className="inline-flex items-center gap-2 text-sm font-bold text-apple-text-secondary hover:text-white bg-white/5 border border-white/10 px-4 py-2 rounded-xl shadow-sm mb-8 transition-all hover:bg-white/10 group"
+                className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl shadow-sm mb-8 transition-all hover:bg-slate-100 group"
               >
                 <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />{" "}
                 Back to Dashboard
@@ -546,16 +546,16 @@ const ManageProject = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-apple-blue/10 border border-apple-blue/20 rounded-lg mb-4">
-                  <LayoutDashboard className="w-4 h-4 text-apple-blue" />
-                  <span className="text-xs font-bold text-apple-blue uppercase tracking-widest">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg mb-4">
+                  <LayoutDashboard className="w-4 h-4 text-blue-600" />
+                  <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">
                     Recruitment Workspace
                   </span>
                 </div>
-                <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
                   {project.title}
                 </h1>
-                <p className="text-apple-text-secondary font-medium mt-2 text-lg">
+                <p className="text-slate-500 font-medium mt-2 text-lg">
                   Manage Candidates & Recruitment Workflow
                 </p>
               </motion.div>
@@ -565,11 +565,11 @@ const ManageProject = () => {
                 transition={{ delay: 0.2 }}
                 className="flex shrink-0"
               >
-                <div className="text-center liquid-glass-card rounded-2xl py-4 px-8 shadow-sm">
-                  <p className="text-4xl font-extrabold text-apple-blue">
+                <div className="text-center bg-white border border-slate-200 shadow-md rounded-2xl py-4 px-8 shadow-sm">
+                  <p className="text-4xl font-extrabold text-blue-600">
                     {project.applicantCount}
                   </p>
-                  <p className="text-[11px] font-bold text-apple-text-secondary uppercase tracking-widest mt-1">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mt-1">
                     Total Applicants
                   </p>
                 </div>
@@ -599,20 +599,20 @@ const ManageProject = () => {
                   onClick={() => setActiveTab(t.id)}
                   className={`relative flex items-center gap-2 whitespace-nowrap px-5 py-3 rounded-xl text-sm font-bold transition-all ${
                     activeTab === t.id
-                      ? "text-white bg-white/10"
-                      : "text-apple-text-secondary hover:text-white bg-transparent"
+                      ? "text-slate-900 bg-slate-100"
+                      : "text-slate-500 hover:text-slate-900 bg-transparent"
                   }`}
                 >
                   {t.label}
                   <span
-                    className={`text-[11px] font-extrabold px-2 py-0.5 rounded-lg ${activeTab === t.id ? "bg-white/20 text-white" : "bg-white/10 text-white/80"}`}
+                    className={`text-[11px] font-extrabold px-2 py-0.5 rounded-lg ${activeTab === t.id ? "bg-slate-200 text-slate-900" : "bg-slate-100 text-slate-600"}`}
                   >
                     {count || 0}
                   </span>
                   {activeTab === t.id && (
                     <motion.div
                       layoutId="manage-tab"
-                      className="absolute inset-0 border border-white/20 rounded-xl -z-10"
+                      className="absolute inset-0 border border-slate-300 rounded-xl -z-10"
                     />
                   )}
                 </button>
@@ -628,15 +628,15 @@ const ManageProject = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="liquid-glass-card rounded-[2rem] p-16 text-center shadow-sm max-w-2xl mx-auto"
+                  className="bg-white border border-slate-200 shadow-md rounded-2xl p-16 text-center shadow-sm max-w-2xl mx-auto"
                 >
-                  <div className="w-24 h-24 bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center mx-auto mb-6 shadow-sm">
-                    <Users className="w-10 h-10 text-white/60" />
+                  <div className="w-24 h-24 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center mx-auto mb-6 shadow-sm">
+                    <Users className="w-10 h-10 text-slate-500" />
                   </div>
-                  <h3 className="text-2xl font-extrabold text-white mb-2">
+                  <h3 className="text-2xl font-extrabold text-slate-900 mb-2">
                     No applicants found
                   </h3>
-                  <p className="text-apple-text-secondary text-base font-medium">
+                  <p className="text-slate-500 text-base font-medium">
                     There are no applications matching the current status
                     filter.
                   </p>
@@ -660,3 +660,6 @@ const ManageProject = () => {
 };
 
 export default ManageProject;
+
+
+

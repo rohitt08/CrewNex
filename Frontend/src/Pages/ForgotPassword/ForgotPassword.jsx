@@ -33,9 +33,9 @@ const ForgotPassword = () => {
     <Layout>
       <div className="min-h-[80vh] flex items-center justify-center px-4 relative overflow-hidden bg-[#FAFAFA]">
         {/* Background elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-200/40 rounded-full blur-[100px] pointer-events-none mix-blend-multiply"></div>
+        
 
-        <div className="max-w-md w-full glass-card border border-white/50 rounded-3xl p-8 sm:p-10 shadow-2xl relative z-10 animate-fade-in-up">
+        <div className="max-w-md w-full bg-white border border-slate-200 rounded-xl p-8 sm:p-10 shadow-lg relative z-10 animate-fade-in-up">
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
               <Mail className="w-10 h-10 text-indigo-600" />
@@ -70,7 +70,7 @@ const ForgotPassword = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-premium text-white py-4 rounded-xl font-bold hover:opacity-90 transition-all shadow-[0_4px_15px_rgba(79,70,229,0.3)] hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none flex items-center justify-center gap-2"
+              className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:opacity-90 transition-all shadow-sm hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none flex items-center justify-center gap-2"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -97,3 +97,5 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
+
+
