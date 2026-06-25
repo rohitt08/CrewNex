@@ -38,6 +38,7 @@ const Interview = () => {
           setQuestions(res.data.questions);
         }
       } catch (err) {
+        console.error(err);
         toast.error("Failed to load interview questions");
       } finally {
         setFetchingQuestions(false);

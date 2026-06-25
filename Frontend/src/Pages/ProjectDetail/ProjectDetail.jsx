@@ -55,7 +55,7 @@ const ApplyModal = ({ project, onClose, onSuccess, appliedRoles }) => {
   const [selectedRole, setSelectedRole] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [togglingStatus, setTogglingStatus] = useState(false);
+
   const [profileResume, setProfileResume] = useState(""); // resume from user profile
   const [resumeUrl, setResumeUrl] = useState(""); // resume that will be submitted
   const [uploadingResume, setUploadingResume] = useState(false);
@@ -161,26 +161,6 @@ const ApplyModal = ({ project, onClose, onSuccess, appliedRoles }) => {
       toast.error(err.response?.data?.message || "Failed to apply");
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const handleToggleStatus = async () => {
-    try {
-      setTogglingStatus(true);
-      const token = localStorage.getItem("token");
-      const res = await axios.patch(
-        `${API_URL}/projects/${id}/status`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      if (res.data.success) {
-        toast.success(res.data.message);
-        setProject(prev => ({ ...prev, status: res.data.status }));
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update status");
-    } finally {
-      setTogglingStatus(false);
     }
   };
 
