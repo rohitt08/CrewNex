@@ -67,6 +67,7 @@ const CreateProject = () => {
     deadline: "",
     duration: "",
     budget: "",
+    hourlyRate: "",
   });
 
   useEffect(() => {
@@ -86,6 +87,7 @@ const CreateProject = () => {
               deadline: proj.deadline ? proj.deadline.split('T')[0] : "",
               duration: proj.duration || "",
               budget: proj.budget || "",
+              hourlyRate: proj.hourlyRate || "",
             });
             if (proj.roles && proj.roles.length > 0) {
               setRoles(proj.roles.map(r => ({ ...r, _tempSkill: "" })));
@@ -168,6 +170,7 @@ const CreateProject = () => {
         duration: form.duration.trim(),
         roles: cleanedRoles,
         budget: form.type === "freelancing" ? Number(form.budget) : 0,
+        hourlyRate: form.type === "freelancing" ? Number(form.hourlyRate) : 0,
       };
 
       const res = id
@@ -176,7 +179,7 @@ const CreateProject = () => {
 
       if (res.data.success) {
         toast.success(id ? "Project updated successfully!" : "Project posted successfully!", { id: toastId });
-        navigate(`/projects/${res.data.project._id}`);
+        navigate("/admin-dashboard");
       }
     } catch (error) {
       console.error(error);
@@ -232,7 +235,7 @@ const CreateProject = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white shadow-md rounded-2xl p-8 sm:p-10 border border-slate-200 relative overflow-hidden"
+              className="bg-white shadow-md rounded-2xl p-6 sm:p-10 border border-slate-200 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/10 blur-[40px] pointer-events-none"></div>
 
@@ -281,7 +284,7 @@ const CreateProject = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white shadow-md rounded-2xl p-8 sm:p-10 border border-slate-200 relative overflow-hidden"
+              className="bg-white shadow-md rounded-2xl p-6 sm:p-10 border border-slate-200 relative overflow-hidden"
             >
               <h2 className="text-lg font-extrabold text-slate-900 mb-8 flex items-center gap-3 relative z-10">
                 <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 shadow-sm">
@@ -374,6 +377,32 @@ const CreateProject = () => {
                         This is the total amount you agree to pay the selected
                         applicant(s) upon project completion.
                       </p>
+
+                      {/* Hourly Rate */}
+                      <div className="mt-5 pt-5 border-t border-emerald-200">
+                        <label className="text-xs font-bold text-emerald-600 uppercase tracking-widest block mb-2">
+                          ⏱ Hourly Rate
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-600/50 font-extrabold text-lg select-none">
+                            ₹
+                          </span>
+                          <input
+                            type="number"
+                            min={0}
+                            value={form.hourlyRate}
+                            onChange={(e) => setField("hourlyRate", e.target.value)}
+                            placeholder="e.g. 500"
+                            className="w-full pl-10 pr-16 py-4 bg-slate-50 border border-emerald-300 rounded-xl text-base font-extrabold text-slate-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder-emerald-300 shadow-sm"
+                          />
+                          <span className="absolute right-5 top-1/2 -translate-y-1/2 text-emerald-500 font-bold text-sm select-none">
+                            / hr
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium text-emerald-600 mt-2">
+                          The rate you'll pay per hour of work. Leave 0 if not applicable.
+                        </p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -384,7 +413,7 @@ const CreateProject = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white shadow-md rounded-2xl p-8 sm:p-10 border border-slate-200"
+              className="bg-white shadow-md rounded-2xl p-6 sm:p-10 border border-slate-200"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
                 <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-3">
@@ -422,16 +451,21 @@ const CreateProject = () => {
                       }}
                       className="bg-slate-50 border border-slate-200 rounded-2xl p-6 relative group shadow-sm hover:shadow-md transition-all"
                     >
-                      {roles.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeRole(idx)}
-                          className="absolute top-4 right-4 p-2 text-slate-600 hover:text-slate-900 hover:bg-red-100 rounded-lg transition-colors bg-slate-50 border border-slate-200 z-10"
-                          title="Remove role"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      )}
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-sm font-extrabold text-slate-700">
+                          Role #{idx + 1}
+                        </h3>
+                        {roles.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeRole(idx)}
+                            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-red-100 rounded-lg transition-colors bg-white border border-slate-200 shadow-sm"
+                            title="Remove role"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                         <div>

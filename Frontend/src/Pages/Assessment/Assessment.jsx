@@ -52,7 +52,7 @@ const Header = () => (
         <FileText className="w-5 h-5 text-slate-900" />
       </div>
       <div>
-        <span className="text-2xl font-black text-slate-900 tracking-tight leading-none block">
+        <span className="text-2xl font-black text-white tracking-tight leading-none block">
           CrewNex
         </span>
         <p className="text-indigo-200 text-[10px] mt-0.5 font-bold uppercase tracking-widest">
@@ -227,7 +227,7 @@ const Assessment = () => {
         {stage === STAGE.VERIFYING && (
           <GradientCard>
             <Header />
-            <div className="p-12 text-center">
+            <div className="p-6 sm:p-12 text-center">
               <div className="w-20 h-20 mx-auto mb-8 rounded-2xl flex items-center justify-center bg-indigo-50 border border-indigo-100 shadow-sm">
                 <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
               </div>
@@ -245,7 +245,7 @@ const Assessment = () => {
         {stage === STAGE.ERROR && (
           <GradientCard>
             <Header />
-            <div className="p-12 text-center">
+            <div className="p-6 sm:p-12 text-center">
               <div className="w-20 h-20 mx-auto mb-8 rounded-2xl flex items-center justify-center bg-red-50 border border-red-100 shadow-sm">
                 <AlertCircle className="w-10 h-10 text-red-500" />
               </div>
@@ -283,7 +283,7 @@ const Assessment = () => {
                 role
               </p>
             </div>
-            <div className="p-8 sm:p-10">
+            <div className="p-6 sm:p-10">
               <h2 className="text-2xl font-black text-slate-900 mb-2">
                 Sign In to Continue
               </h2>
@@ -325,7 +325,7 @@ const Assessment = () => {
                 <button
                   type="submit"
                   disabled={loginLoading}
-                  className="w-full py-4 mt-2 rounded-xl bg-slate-900 text-slate-900 font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-md hover:-translate-y-0.5 transform"
+                  className="w-full py-4 mt-2 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-md hover:-translate-y-0.5 transform"
                 >
                   {loginLoading ? (
                     <>
@@ -361,7 +361,7 @@ const Assessment = () => {
               </p>
             </div>
 
-            <div className="p-8 sm:p-10">
+            <div className="p-6 sm:p-10">
               <h2 className="text-2xl font-black text-slate-900 mb-2">
                 Assessment Instructions
               </h2>
@@ -374,7 +374,7 @@ const Assessment = () => {
                   {
                     icon: HelpCircle,
                     label: "Questions",
-                    val: "30 MCQs",
+                    val: "20 MCQs",
                     color: "text-blue-600",
                     bg: "bg-blue-50",
                   },
@@ -444,7 +444,7 @@ const Assessment = () => {
               <button
                 onClick={startTest}
                 disabled={generating}
-                className="w-full py-4 rounded-xl bg-slate-900 text-slate-900 font-bold text-base flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-sm hover:-translate-y-0.5 disabled:opacity-70 disabled:pointer-events-none disabled:transform-none"
+                className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-base flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-sm hover:-translate-y-0.5 disabled:opacity-70 disabled:pointer-events-none disabled:transform-none"
               >
                 {generating ? (
                   <>
@@ -469,7 +469,7 @@ const Assessment = () => {
               <GradientCard className="!rounded-2xl shadow-sm">
                 <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-900 text-slate-900 shadow-md shrink-0">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-900 text-white shadow-md shrink-0">
                       <BrainCircuit className="w-6 h-6" />
                     </div>
                     <div>
@@ -496,7 +496,7 @@ const Assessment = () => {
                           ? "bg-red-50 text-red-600 border-red-200 animate-pulse"
                           : timerWarning
                             ? "bg-amber-50 text-amber-600 border-amber-200"
-                            : "bg-slate-900 text-slate-900 border-slate-800"
+                            : "bg-slate-900 text-white border-slate-800"
                       }`}
                     >
                       <Timer className="w-5 h-5" /> {fmt(timeLeft)}
@@ -522,7 +522,7 @@ const Assessment = () => {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-6">
                     <div
-                      className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shadow-sm ${answers[qi] !== null ? "bg-indigo-600 text-slate-900" : "bg-slate-100 text-slate-500 border border-slate-200"}`}
+                      className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shadow-sm ${answers[qi] !== null ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-500 border border-slate-200"}`}
                     >
                       {qi + 1}
                     </div>
@@ -553,7 +553,7 @@ const Assessment = () => {
                           className={`w-full text-left px-5 py-4 rounded-xl border-2 text-sm font-semibold transition-all flex items-center gap-4 group ${selected ? "bg-indigo-50/50 border-indigo-500 text-indigo-900 shadow-sm" : "bg-white border-slate-100 text-slate-600 hover:border-indigo-200 hover:bg-slate-50"}`}
                         >
                           <span
-                            className={`flex items-center justify-center w-6 h-6 rounded-md border text-xs font-extrabold shrink-0 ${selected ? "bg-indigo-500 border-indigo-500 text-slate-900" : "bg-slate-100 border-slate-200 text-slate-500 group-hover:bg-white group-hover:border-indigo-300 group-hover:text-indigo-500"}`}
+                            className={`flex items-center justify-center w-6 h-6 rounded-md border text-xs font-extrabold shrink-0 ${selected ? "bg-indigo-500 border-indigo-500 text-white" : "bg-slate-100 border-slate-200 text-slate-500 group-hover:bg-white group-hover:border-indigo-300 group-hover:text-indigo-500"}`}
                           >
                             {["A", "B", "C", "D"][oi]}
                           </span>
@@ -566,7 +566,7 @@ const Assessment = () => {
               ))}
 
               {/* Submit Section */}
-              <div className="glass-card border border-white/40 rounded-xl p-8 text-center mt-8">
+              <div className="glass-card border border-white/40 rounded-xl p-6 sm:p-8 text-center mt-8">
                 {answered < questions.length ? (
                   <div className="mb-6 inline-flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200 px-4 py-2 rounded-xl text-sm font-bold shadow-sm">
                     <AlertCircle className="w-4 h-4" />{" "}
@@ -581,7 +581,7 @@ const Assessment = () => {
                 <button
                   onClick={() => handleSubmit(false)}
                   disabled={submitting}
-                  className="w-full sm:w-auto px-12 py-4 rounded-xl bg-slate-900 text-slate-900 font-extrabold text-base transition-all flex items-center justify-center gap-3 mx-auto shadow-md hover:bg-slate-800 hover:-translate-y-0.5 disabled:opacity-70 disabled:transform-none"
+                  className="w-full sm:w-auto px-12 py-4 rounded-xl bg-slate-900 text-white font-extrabold text-base transition-all flex items-center justify-center gap-3 mx-auto shadow-md hover:bg-slate-800 hover:-translate-y-0.5 disabled:opacity-70 disabled:transform-none"
                 >
                   {submitting ? (
                     <>
@@ -602,7 +602,7 @@ const Assessment = () => {
         {stage === STAGE.RESULT && (
           <GradientCard className="animate-fade-in-up">
             <Header />
-            <div className="p-10 sm:p-14 text-center">
+            <div className="p-6 sm:p-10 lg:p-14 text-center">
               <div className="w-28 h-28 mx-auto mb-8 rounded-full flex items-center justify-center bg-emerald-50 border-4 border-emerald-100 shadow-sm relative">
                 <div className="absolute inset-0 bg-emerald-400 rounded-full blur-[20px] opacity-20"></div>
                 <CheckCircle2 className="w-14 h-14 text-emerald-500 relative z-10" />
@@ -629,7 +629,7 @@ const Assessment = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => navigate("/my-applications")}
-                  className="px-8 py-3.5 rounded-xl bg-slate-900 text-slate-900 text-sm font-bold shadow-md hover:bg-slate-800 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                  className="px-8 py-3.5 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-md hover:bg-slate-800 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
                 >
                   View My Applications <ArrowRight className="w-4 h-4" />
                 </button>

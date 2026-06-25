@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout";
 import ProjectChatWindow from "../../Components/ProjectChatWindow/ProjectChatWindow";
 import axios from "axios";
@@ -51,10 +51,11 @@ const TYPE_META = {
   },
 };
 
-const ApplyModal = ({ project, onClose, onSuccess }) => {
+const ApplyModal = ({ project, onClose, onSuccess, appliedRoles }) => {
   const [selectedRole, setSelectedRole] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [togglingStatus, setTogglingStatus] = useState(false);
   const [profileResume, setProfileResume] = useState(""); // resume from user profile
   const [resumeUrl, setResumeUrl] = useState(""); // resume that will be submitted
   const [uploadingResume, setUploadingResume] = useState(false);
@@ -65,7 +66,7 @@ const ApplyModal = ({ project, onClose, onSuccess }) => {
   const token = localStorage.getItem("token");
 
   const availableRoles =
-    project?.roles?.filter((r) => r.membersFilled < r.membersNeeded) || [];
+    project?.roles?.filter((r) => r.membersFilled < r.membersNeeded && (appliedRoles || []).includes(r.roleName) === false) || [];
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -160,6 +161,26 @@ const ApplyModal = ({ project, onClose, onSuccess }) => {
       toast.error(err.response?.data?.message || "Failed to apply");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleToggleStatus = async () => {
+    try {
+      setTogglingStatus(true);
+      const token = localStorage.getItem("token");
+      const res = await axios.patch(
+        `${API_URL}/projects/${id}/status`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        setProject(prev => ({ ...prev, status: res.data.status }));
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to update status");
+    } finally {
+      setTogglingStatus(false);
     }
   };
 
@@ -334,7 +355,7 @@ const ApplyModal = ({ project, onClose, onSuccess }) => {
                   <div>
                     <label
                       htmlFor="apply-resume-upload"
-                      className={`flex flex-col items-center justify-center gap-3 p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
+                      className={`flex flex-col items-center justify-center gap-3 p-6 sm:p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
                         uploadingResume
                           ? "border-slate-300 bg-slate-50"
                           : resumeUrl
@@ -451,11 +472,12 @@ const ApplyModal = ({ project, onClose, onSuccess }) => {
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showApply, setShowApply] = useState(false);
-  const [hasApplied, setHasApplied] = useState(false);
-  const [applicationStatus, setApplicationStatus] = useState(null);
+  const [appliedRoles, setAppliedRoles] = useState([]);
+  const [togglingStatus, setTogglingStatus] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL;
   const isLoggedIn = !!localStorage.getItem("token");
@@ -479,8 +501,7 @@ const ProjectDetail = () => {
       });
       if (res.data.success) {
         setProject(res.data.project);
-        setHasApplied(res.data.project.hasApplied || false);
-        setApplicationStatus(res.data.project.applicationStatus || null);
+        setAppliedRoles(res.data.project.appliedRoles || []);
       }
     } catch (err) {
       console.error(err);
@@ -495,6 +516,31 @@ const ProjectDetail = () => {
     fetchProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  const handleToggleStatus = async () => {
+    try {
+      setTogglingStatus(true);
+      const token = localStorage.getItem("token");
+      const res = await axios.patch(
+        `${API_URL}/projects/${id}/status`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.success) {
+        setProject({ ...project, status: res.data.status });
+        toast.success(
+          `Project is now ${
+            res.data.status === "open" ? "open for" : "closed to"
+          } applications.`
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Failed to update project status");
+    } finally {
+      setTogglingStatus(false);
+    }
+  };
 
   const meta = project ? TYPE_META[project.type] || TYPE_META.group : null;
   const Icon = meta?.icon || Users;
@@ -524,7 +570,8 @@ const ProjectDetail = () => {
 
   if (!project) return null;
 
-  const canChat = isCreator || applicationStatus === "selected" || applicationStatus === "accepted";
+  // Only creator and selected/accepted members can access project chat
+  const canChat = isCreator || project?.canChat;
 
   return (
     <Layout>
@@ -533,8 +580,8 @@ const ProjectDetail = () => {
           <ApplyModal
             project={project}
             onClose={() => setShowApply(false)}
+            appliedRoles={appliedRoles}
             onSuccess={() => {
-              setHasApplied(true);
               fetchProject();
             }}
           />
@@ -554,7 +601,7 @@ const ProjectDetail = () => {
               className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 font-bold group transition-colors mb-10 bg-white border border-slate-200 shadow-sm px-4 py-2 rounded-xl"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Back to Explore
+              {location.state?.from === 'dashboard' ? 'Back to Dashboard' : 'Back to Explore'}
             </motion.button>
 
             <motion.div
@@ -573,10 +620,10 @@ const ProjectDetail = () => {
                 className={`text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-sm ${
                   project.status === "open"
                     ? "bg-emerald-100 text-emerald-600 border border-emerald-300"
-                    : "bg-slate-50 text-slate-500 border border-slate-200"
+                    : "bg-red-100 text-red-600 border border-red-300"
                 }`}
               >
-                {project.status === "open" ? "Open for Applications" : "Closed"}
+                {project.status === "open" ? "Open for Applications" : "Closed for Applications"}
               </span>
             </motion.div>
 
@@ -631,7 +678,7 @@ const ProjectDetail = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-white border border-slate-200 shadow-md rounded-xl p-8 sm:p-10"
+                className="bg-white border border-slate-200 shadow-md rounded-xl p-6 sm:p-10"
               >
                 <h2 className="text-2xl font-extrabold text-slate-900 mb-6 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-200">
@@ -649,7 +696,7 @@ const ProjectDetail = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="bg-white border border-slate-200 shadow-md rounded-xl p-8 sm:p-10"
+                className="bg-white border border-slate-200 shadow-md rounded-xl p-6 sm:p-10"
               >
                 <h2 className="text-2xl font-extrabold text-slate-900 mb-8 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center border border-purple-200">
@@ -722,18 +769,33 @@ const ProjectDetail = () => {
               className="space-y-8"
             >
               {/* Action Card */}
-              <div className="bg-white border border-slate-200 shadow-md rounded-xl p-8 sticky top-28">
+              <div className="bg-white border border-slate-200 shadow-md rounded-xl p-6 sm:p-8 sticky top-28">
                 <h3 className="text-2xl font-extrabold text-slate-900 mb-3">
-                  Ready to Join?
+                  {isCreator ? "Project Controls" : "Ready to Join?"}
                 </h3>
                 <p className="text-base text-slate-500 font-medium mb-8">
-                  {slots > 0
+                  {isCreator
+                    ? "You are the creator of this project. Manage the details below."
+                    : (project.roles?.reduce((sum, role) => sum + Math.max(0, role.membersNeeded - role.membersFilled), 0) || 0) > 0
                     ? "Submit your application now before the remaining roles fill up."
                     : "This project team is currently full."}
                 </p>
 
                 {isCreator && (
                   <div className="space-y-4 mb-4">
+                    <motion.button
+                      whileHover={{ y: -2 }}
+                      whileTap={{ y: 0 }}
+                      onClick={handleToggleStatus}
+                      disabled={togglingStatus}
+                      className={`group relative w-full flex items-center justify-center gap-2 px-6 py-4 font-extrabold text-lg rounded-2xl shadow-sm transition-all overflow-hidden border ${
+                        project.status === "open" 
+                        ? "bg-white text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                        : "bg-emerald-500 text-white hover:bg-emerald-600 border-transparent"
+                      }`}
+                    >
+                      {togglingStatus ? <Loader2 className="w-5 h-5 animate-spin" /> : project.status === "open" ? "Close for Applications" : "Open for Applications"}
+                    </motion.button>
                     <motion.button
                       whileHover={{ y: -2 }}
                       whileTap={{ y: 0 }}
@@ -745,16 +807,22 @@ const ProjectDetail = () => {
                   </div>
                 )}
 
-                {project.status === "open" &&
+                {(project.status === "open" || project.status === "closed") &&
                   slots > 0 &&
-                  !hasApplied &&
+                  ((project.roles || []).filter(r => r.membersFilled < r.membersNeeded && !(appliedRoles || []).includes(r.roleName)).length > 0) &&
                   !isCreator && (
                     <div className="space-y-4">
                       {isLoggedIn ? (
                         <motion.button
                           whileHover={{ y: -2 }}
                           whileTap={{ y: 0 }}
-                          onClick={() => setShowApply(true)}
+                          onClick={() => {
+                            if (project.status === "closed") {
+                              toast.error("Admin not accepting applications right now, wait for open of application");
+                            } else {
+                              setShowApply(true);
+                            }
+                          }}
                           className="group relative w-full flex items-center justify-center gap-2 px-6 py-4 bg-slate-900 text-white font-extrabold text-lg rounded-2xl shadow-sm overflow-hidden"
                         >
                           <div className="absolute inset-0 w-full h-full hidden "></div>
@@ -772,10 +840,10 @@ const ProjectDetail = () => {
                     </div>
                   )}
 
-                {hasApplied && (
+                {(appliedRoles || []).length > 0 && !((project.roles || []).filter(r => r.membersFilled < r.membersNeeded && !(appliedRoles || []).includes(r.roleName)).length > 0) && !isCreator && (
                   <div className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-2xl font-extrabold text-base shadow-sm">
                     <CheckCircle2 className="w-6 h-6" />
-                    Application Submitted
+                    Application(s) Submitted
                   </div>
                 )}
 
@@ -846,7 +914,7 @@ const ProjectDetail = () => {
 
               {/* Tech Stack / Tags */}
               {(project.techStack?.length > 0 || project.tags?.length > 0) && (
-                <div className="bg-white border border-slate-200 shadow-md rounded-xl p-8">
+                <div className="bg-white border border-slate-200 shadow-md rounded-xl p-6 sm:p-8">
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
                     Skills & Tags
                   </p>
