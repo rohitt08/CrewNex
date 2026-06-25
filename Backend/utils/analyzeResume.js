@@ -23,16 +23,43 @@ const analyzeResume = async ({
     const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
 
     // 1. Fetch the resume buffer
-    const response = await axios.get(resumeUrl, {
-      responseType: "arraybuffer",
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-      },
-    });
+    let pdfBuffer;
+    if (resumeUrl.startsWith("http")) {
+      const response = await axios.get(resumeUrl, {
+        responseType: "arraybuffer",
+        headers: {
+          "User-Agent": "Mozilla/5.0",
+        },
+      });
+      pdfBuffer = response.data;
+    } else {
+      const fs = require("fs");
+      const path = require("path");
+      const filePath = path.join(__dirname, "..", resumeUrl);
+      if (!fs.existsSync(filePath)) {
+        throw new Error("Resume file not found on server");
+      }
+      pdfBuffer = fs.readFileSync(filePath);
+    }
 
-    // 2. Extract text from PDF
-    const pdfData = await pdfParse(response.data);
-    const resumeText = pdfData.text.toLowerCase().replace(/\s+/g, " ");
+    // 2. Extract text based on file type
+    let resumeText = "";
+    const ext = resumeUrl.split(".").pop().toLowerCase();
+
+    if (ext === "pdf") {
+      const pdfData = await pdfParse(pdfBuffer);
+      resumeText = pdfData.text;
+    } else if (ext === "docx") {
+      const mammoth = require("mammoth");
+      const docxData = await mammoth.extractRawText({ buffer: pdfBuffer });
+      resumeText = docxData.value;
+    } else if (ext === "doc") {
+      resumeText = pdfBuffer.toString("binary").replace(/[^\x20-\x7E\n]/g, " ");
+    } else {
+      throw new Error(`Unsupported file type: .${ext}. Only PDF, DOCX, and DOC are supported.`);
+    }
+
+    resumeText = resumeText.toLowerCase().replace(/\s+/g, " ");
 
     if (!OPENROUTER_API_KEY) {
       console.warn("No OPENROUTER_API_KEY found, falling back to regex matcher");

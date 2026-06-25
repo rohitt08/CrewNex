@@ -1,14 +1,15 @@
 const axios = require("axios");
 
 /**
- * Generate 30 multiple-choice assessment questions using OpenRouter AI
+ * Generate 20 multiple-choice assessment questions using OpenRouter AI
  * @param {Object} params
  * @param {string} params.roleName     - The role being assessed (e.g., "Frontend Developer")
  * @param {string[]} params.skills     - Array of skills required for the role
+ * @param {string[]} params.applicantSkills - Array of skills the applicant has from their resume
  * @param {string} params.projectTitle - Title of the project
  * @returns {Promise<Array>}           - Array of question objects
  */
-const generateAssessment = async ({ roleName, skills, projectTitle }) => {
+const generateAssessment = async ({ roleName, skills, applicantSkills = [], projectTitle }) => {
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
   if (!OPENROUTER_API_KEY) {
@@ -19,9 +20,14 @@ const generateAssessment = async ({ roleName, skills, projectTitle }) => {
     ? skills.slice(0, 8).join(", ")
     : roleName; // fallback to roleName if no skills provided
 
-  const prompt = `You are an expert technical interviewer. Generate exactly 30 multiple-choice questions to assess a candidate applying for the role of "${roleName}" in a project called "${projectTitle}".
+  const applicantSkillList = applicantSkills && applicantSkills.length > 0
+    ? applicantSkills.slice(0, 10).join(", ")
+    : "General knowledge";
 
-The assessment should test these skills: ${skillList}.
+  const prompt = `You are an expert technical interviewer. Generate exactly 20 multiple-choice questions to assess a candidate applying for the role of "${roleName}" in a project called "${projectTitle}".
+  
+The assessment should test the required skills: ${skillList}.
+Additionally, tailor some questions to the candidate's specific background skills: ${applicantSkillList}.
 
 Each question must be practical and relevant to the role. Return ONLY a valid JSON array with this exact structure (no markdown, no explanation):
 [
@@ -105,7 +111,7 @@ Rules:
       throw new Error("Invalid question format from AI");
     }
 
-    return questions.slice(0, 30);
+    return questions.slice(0, 20);
   } catch (error) {
     console.error(
       "Assessment Generation Error:",
