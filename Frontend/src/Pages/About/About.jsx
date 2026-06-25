@@ -63,7 +63,7 @@ const About = () => {
           {/* Mission Section */}
           <div className="flex flex-col lg:flex-row gap-16 items-start mb-24">
             <div className="w-full lg:w-1/2">
-              <div className="bg-slate-50 border border-slate-200 shadow-sm rounded-2xl p-8 lg:p-12">
+              <div className="bg-slate-50 border border-slate-200 shadow-sm rounded-2xl p-6 sm:p-8 lg:p-12">
                 <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 tracking-tight">
                   Our Mission
                 </h2>
@@ -166,7 +166,7 @@ const About = () => {
           </div>
 
           {/* CTA Section */}
-          <div className="bg-slate-50 rounded-2xl p-10 sm:p-12 border border-slate-200 shadow-sm">
+          <div className="bg-slate-50 rounded-2xl p-6 sm:p-10 lg:p-12 border border-slate-200 shadow-sm">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
               <div className="text-left max-w-2xl">
                 <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-4">

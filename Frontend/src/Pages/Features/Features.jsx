@@ -11,7 +11,7 @@ import {
 
 // eslint-disable-next-line no-unused-vars
 const FeatureCard = ({ title, desc, icon: Icon, colorClass, index }) => (
-  <div className="group relative flex flex-col bg-white border border-slate-200 shadow-sm hover:shadow-md rounded-xl p-8 overflow-hidden transition-all duration-300">
+  <div className="group relative flex flex-col bg-white border border-slate-200 shadow-sm hover:shadow-md rounded-xl p-6 sm:p-8 overflow-hidden transition-all duration-300">
     <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-6 border border-slate-200 ${colorClass} transition-colors duration-300`}>
       <Icon className="w-6 h-6" />
     </div>
@@ -86,7 +86,7 @@ const Features = () => {
 
         {/* Banner */}
         <div className="mt-20 relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-slate-50">
-          <div className="relative z-10 p-10 sm:p-12 flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="relative z-10 p-6 sm:p-10 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="max-w-2xl text-left">
               <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">
                 Stop searching. Start building.

@@ -68,7 +68,7 @@ const HowItWorks = () => {
               return (
                 <div 
                   key={idx} 
-                  className="bg-white p-8 sm:p-10 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-8 items-start hover:border-apple-blue/30 transition-colors duration-300 group"
+                  className="bg-white p-6 sm:p-10 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-8 items-start hover:border-apple-blue/30 transition-colors duration-300 group"
                 >
                   <div className="shrink-0">
                     <div className="w-16 h-16 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-apple-blue group-hover:bg-blue-50 group-hover:border-blue-100 transition-colors duration-300">

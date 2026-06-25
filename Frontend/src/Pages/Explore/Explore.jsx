@@ -59,6 +59,11 @@ const ProjectCard = ({ project, index }) => {
   const Icon = TYPE_ICON[project.type] || Users;
   const slots = slotsLeft(project);
 
+  // Extract role names from the project's roles array
+  const roleNames = project.roles?.map((r) => (typeof r === "string" ? r : r.roleName || r.title || r.name || "Role")) || [];
+  // Tech stack from tags
+  const techStack = project.tags || [];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -69,65 +74,131 @@ const ProjectCard = ({ project, index }) => {
         type: "spring",
         stiffness: 100,
       }}
-      whileHover={{ y: -8, scale: 1.01 }}
+      whileHover={{ y: -6 }}
     >
-      <Link
-        to={`/projects/${project._id}`}
-        className="group flex flex-col bg-white border border-slate-200 shadow-md rounded-2xl overflow-hidden relative h-[380px] hover:shadow-lg transition-all"
-      >
+      <div className="group flex flex-col bg-white border border-slate-200 shadow-md rounded-2xl overflow-hidden relative hover:shadow-lg transition-all">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-apple-blue to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        <div className="p-6 flex-1 flex flex-col gap-4">
-          {/* Header row */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-slate-50 border border-slate-200 shadow-sm group-hover:bg-blue-50 transition-colors duration-300">
-                <Icon className="w-6 h-6 text-slate-500 group-hover:text-apple-blue transition-colors" />
-              </div>
-              <div>
-                <h3 className="text-lg font-extrabold text-slate-900 leading-tight group-hover:text-apple-blue transition-colors line-clamp-1">
-                  {project.title}
-                </h3>
-                <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">
-                  {project.createdBy?.name || "Company / Creator"}
-                </p>
-              </div>
-            </div>
+
+        <div className="p-5 flex-1 flex flex-col gap-3">
+          {/* Type badge + date row */}
+          <div className="flex items-center justify-between">
             <span
-              className={`text-[10px] font-bold px-2.5 py-1 rounded-md border ${meta.color} shrink-0 uppercase tracking-widest shadow-sm`}
+              className={`text-[10px] font-bold px-2.5 py-1 rounded-md border ${meta.color} uppercase tracking-widest shadow-sm flex items-center gap-1.5`}
             >
+              <Icon className="w-3 h-3" />
               {meta.label}
             </span>
+            <div className="flex items-center gap-2">
+              {project.type === "freelancing" && project.hourlyRate > 0 && (
+                <span className="text-[11px] font-extrabold px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+                  ₹{project.hourlyRate}/hr
+                </span>
+              )}
+              <span className="text-[11px] font-semibold text-slate-400">
+                {timeAgo(project.createdAt)}
+              </span>
+            </div>
           </div>
 
+          {/* Title — full visibility */}
+          <Link to={`/projects/${project._id}`}>
+            <h3 className="text-lg font-extrabold text-slate-900 leading-snug group-hover:text-apple-blue transition-colors">
+              {project.title}
+            </h3>
+          </Link>
+
+          {/* Creator — linked to profile */}
+          {project.createdBy && (
+            <Link
+              to={`/profile/${project.createdBy._id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-2 w-fit hover:bg-slate-100 px-2 py-1 -mx-2 rounded-lg transition-colors"
+            >
+              {project.createdBy.profilePic &&
+              !project.createdBy.profilePic.includes("via.placeholder.com") ? (
+                <img
+                  src={project.createdBy.profilePic}
+                  alt={project.createdBy.name}
+                  className="w-5 h-5 rounded-md object-cover border border-slate-300 shadow-sm"
+                />
+              ) : (
+                <div className="w-5 h-5 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-600">
+                  {project.createdBy.name?.[0]?.toUpperCase() || "?"}
+                </div>
+              )}
+              <span className="text-xs font-semibold text-slate-500">
+                by{" "}
+                <span className="text-slate-700 font-bold hover:text-blue-600 transition-colors">
+                  {project.createdBy.name}
+                </span>
+              </span>
+            </Link>
+          )}
+
           {/* Description */}
-          <p className="text-sm text-slate-500 leading-relaxed line-clamp-2 mt-2 flex-1 font-medium">
+          <p className="text-sm text-slate-500 leading-relaxed line-clamp-2 font-medium">
             {project.description}
           </p>
 
-          {/* Tags */}
-          {project.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
-              {project.tags.slice(0, 3).map((tag, i) => (
-                <span
-                  key={i}
-                  className="text-[11px] px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-600 rounded-md font-semibold group-hover:bg-slate-100 transition-colors"
-                >
-                  {tag}
-                </span>
-              ))}
-              {project.tags.length > 3 && (
-                <span className="text-[11px] px-2.5 py-1 text-slate-500 font-bold bg-transparent border border-transparent rounded-md">
-                  +{project.tags.length - 3}
-                </span>
-              )}
+          {/* Roles */}
+          {roleNames.length > 0 && (
+            <div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                Open Roles
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {roleNames.slice(0, 3).map((role, i) => (
+                  <span
+                    key={i}
+                    className="text-[11px] px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-md font-bold"
+                  >
+                    {typeof role === "string" ? role : role}
+                  </span>
+                ))}
+                {roleNames.length > 3 && (
+                  <span className="text-[11px] px-2 py-0.5 text-slate-500 font-bold">
+                    +{roleNames.length - 3} more
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Tech Stack */}
+          {techStack.length > 0 && (
+            <div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                Tech Stack
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {techStack.slice(0, 4).map((tag, i) => (
+                  <span
+                    key={i}
+                    className="text-[11px] px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-600 rounded-md font-semibold"
+                  >
+                    {tag}
+                  </span>
+                ))}
+                {techStack.length > 4 && (
+                  <span className="text-[11px] px-2 py-0.5 text-slate-400 font-bold">
+                    +{techStack.length - 4}
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>
 
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between mt-auto group-hover:bg-blue-50/50 transition-colors">
+        {/* Footer */}
+        <Link
+          to={`/projects/${project._id}`}
+          className="px-5 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between group-hover:bg-blue-50/50 transition-colors"
+        >
           <span className="text-xs font-bold flex items-center gap-1.5 text-slate-500">
             <Users className="w-4 h-4" />
-            {slots > 0 ? (
+            {project.status === "closed" ? (
+              <span className="text-red-500">Closed</span>
+            ) : slots > 0 ? (
               <>
                 <span className="text-emerald-600">{slots} slots left</span> of{" "}
                 {project.totalMembers}
@@ -136,11 +207,11 @@ const ProjectCard = ({ project, index }) => {
               <span className="text-slate-500">Team Full</span>
             )}
           </span>
-          <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
-            {timeAgo(project.createdAt)}
+          <span className="text-[11px] font-bold text-apple-blue transition-opacity">
+            View Details →
           </span>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </motion.div>
   );
 };
@@ -167,7 +238,7 @@ const Explore = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const params = { status: "open" };
+      const params = { status: "all" };
       if (activeType !== "all") params.type = activeType;
       const res = await axios.get(`${API_URL}/projects`, { params });
       if (res.data.success) setProjects(res.data.projects);
@@ -313,7 +384,7 @@ const Explore = () => {
         {/* ── Content ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 relative z-10">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(8)].map((_, i) => (
                 <ProjectCardSkeleton key={i} />
               ))}
