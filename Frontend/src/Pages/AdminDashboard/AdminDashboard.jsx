@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Users,
   Briefcase,
@@ -23,6 +23,8 @@ import {
   Loader2,
   Shield,
   Sparkles,
+  Pen,
+  Trash2,
 } from "lucide-react";
 
 const TYPE_META = {
@@ -53,16 +55,16 @@ const TYPE_META = {
 };
 
 // ─── Project Card with expandable applicants ───────────────────────────────────
-const ProjectCard = ({ project, index }) => {
+const ProjectCard = ({ project, index, onDelete }) => {
   const meta = TYPE_META[project.type] || TYPE_META.group;
 
   const pending =
     project.applications?.filter((a) => a.status === "pending").length || 0;
   const accepted =
-    project.applications?.filter((a) => a.status === "accepted").length || 0;
-  const slots = (project.totalMembers || 0) - (project.membersFilled || 0);
+    project.applications?.filter((a) => a.status === "selected").length || 0;
+  const slots = (project.totalMembers || 0) - accepted;
   const pct = Math.min(
-    (project.membersFilled / Math.max(project.totalMembers, 1)) * 100,
+    (accepted / Math.max(project.totalMembers, 1)) * 100,
     100,
   );
 
@@ -86,6 +88,7 @@ const ProjectCard = ({ project, index }) => {
             <div className="pt-1">
               <Link
                 to={`/projects/${project._id}`}
+                state={{ from: 'dashboard' }}
                 className="text-base font-extrabold text-slate-900 hover:text-blue-600 transition-colors flex items-center gap-1"
               >
                 {project.title}
@@ -113,24 +116,24 @@ const ProjectCard = ({ project, index }) => {
         </div>
 
         {/* Mini stats */}
-        <div className="grid grid-cols-3 gap-2 mb-5 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-          <div className="flex flex-col items-center justify-center text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+          <div className="flex flex-row sm:flex-col items-center justify-between sm:justify-center text-center px-2">
             <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> Pending
             </span>
             <span className="text-sm font-extrabold text-slate-900">{pending}</span>
           </div>
-          <div className="flex flex-col items-center justify-center text-center border-x border-slate-200">
-            <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
+          <div className="flex flex-row sm:flex-col items-center justify-between sm:justify-center text-center border-y sm:border-y-0 sm:border-x border-slate-200 py-2 sm:py-0 px-2">
+            <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0 sm:mb-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />{" "}
-              Accepted
+              Selected
             </span>
             <span className="text-sm font-extrabold text-slate-900">
               {accepted}
             </span>
           </div>
-          <div className="flex flex-col items-center justify-center text-center">
-            <span className="flex items-center gap-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
+          <div className="flex flex-row sm:flex-col items-center justify-between sm:justify-center text-center px-2">
+            <span className="flex items-center gap-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0 sm:mb-1">
               <Users className="w-3 h-3 text-blue-600" /> Slots
             </span>
             <span className="text-sm font-extrabold text-slate-900">
@@ -158,6 +161,20 @@ const ProjectCard = ({ project, index }) => {
         </div>
 
         {/* Manage Action */}
+        <div className="flex gap-2 mb-2">
+          <Link
+            to={`/edit-project/${project._id}`}
+            className="flex-1 flex items-center justify-center gap-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-all py-2.5 rounded-xl shadow-sm"
+          >
+            <Pen className="w-4 h-4" /> Edit
+          </Link>
+          <button
+            onClick={() => onDelete(project._id)}
+            className="flex-1 flex items-center justify-center gap-2 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-all py-2.5 rounded-xl shadow-sm"
+          >
+            <Trash2 className="w-4 h-4" /> Delete
+          </button>
+        </div>
         <Link
           to={`/manage-project/${project._id}`}
           className="flex items-center justify-center gap-2 text-sm font-bold text-slate-900 bg-slate-50 hover:bg-apple-blue/20 border border-slate-200 hover:border-apple-blue/30 hover:text-blue-600 transition-all w-full py-3 rounded-xl shadow-sm group/btn"
@@ -174,6 +191,7 @@ const ProjectCard = ({ project, index }) => {
 const AdminDashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [projectToDelete, setProjectToDelete] = useState(null);
   const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL;
@@ -202,7 +220,7 @@ const AdminDashboard = () => {
           });
           if (res.data.success) {
             const totalApps = res.data.projects.reduce(
-              (s, p) => s + p.applicantCount,
+              (s, p) => s + (p.applications?.length || 0),
               0,
             );
             setData({
@@ -228,6 +246,35 @@ const AdminDashboard = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleDeleteProject = (projectId) => {
+    setProjectToDelete(projectId);
+  };
+
+  const confirmDelete = async () => {
+    if (!projectToDelete) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(`${API_URL}/projects/${projectToDelete}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.data.success) {
+        toast.success("Project deleted successfully");
+        setData((prev) => ({
+          ...prev,
+          projects: prev.projects.filter((p) => p._id !== projectToDelete),
+          overview: {
+            ...prev.overview,
+            totalProjects: prev.overview.totalProjects - 1,
+          },
+        }));
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete project");
+    } finally {
+      setProjectToDelete(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -275,7 +322,7 @@ const AdminDashboard = () => {
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-10">
           {/* ── Overview stats ── */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {[
               {
                 label: "Total Projects",
@@ -305,8 +352,10 @@ const AdminDashboard = () => {
                     {
                       label: "Open Slots",
                       value: (data?.projects || []).reduce(
-                        (s, p) =>
-                          s + Math.max(p.totalMembers - p.membersFilled, 0),
+                        (s, p) => {
+                          const accepted = p.applications?.filter((a) => a.status === "selected").length || 0;
+                          return s + Math.max((p.totalMembers || 0) - accepted, 0);
+                        },
                         0,
                       ),
                       icon: TrendingUp,
@@ -320,10 +369,10 @@ const AdminDashboard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + index * 0.1 }}
                 key={s.label}
-                className="bg-white border border-slate-200 shadow-md rounded-2xl p-6 md:p-8 flex items-center gap-5 shadow-sm hover:shadow-md transition-all group"
+                className="bg-white border border-slate-200 shadow-md rounded-2xl p-5 sm:p-6 md:p-8 flex items-center gap-4 sm:gap-5 shadow-sm hover:shadow-md transition-all group"
               >
                 <div
-                  className={`w-14 h-14 rounded-2xl ${s.bg} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}
+                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl ${s.bg} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}
                 >
                   <s.icon className={`w-7 h-7 ${s.accent}`} />
                 </div>
@@ -395,13 +444,56 @@ const AdminDashboard = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {data.projects.map((p, index) => (
-                  <ProjectCard key={p._id} project={p} index={index} />
+                  <ProjectCard key={p._id} project={p} index={index} onDelete={handleDeleteProject} />
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {projectToDelete && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-200"
+            >
+              <div className="p-6">
+                <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4 border border-red-100">
+                  <Trash2 className="w-6 h-6 text-red-500" />
+                </div>
+                <h3 className="text-xl font-extrabold text-slate-900 mb-2">Delete Project?</h3>
+                <p className="text-slate-500 font-medium mb-6 text-sm">
+                  Are you sure you want to permanently delete this project? This action cannot be undone and will remove all applications and team members associated with it.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setProjectToDelete(null)}
+                    className="flex-1 px-4 py-2.5 bg-slate-50 text-slate-700 font-bold rounded-xl border border-slate-200 hover:bg-slate-100 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className="flex-1 px-4 py-2.5 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    Delete Permanently
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Layout>
   );
 };

@@ -17,9 +17,14 @@ import {
   ArrowUpRight,
   ShieldCheck,
   Mail,
+  PlayCircle,
+  Video,
+  Loader2,
+  Trash2,
 } from "lucide-react";
 import { Skeleton } from "../../Components/Loading/Skeleton";
 import EmptyState from "../../Components/States/EmptyState";
+import { toast } from "react-hot-toast";
 
 const TYPE_META = {
   capstone: {
@@ -94,8 +99,29 @@ const MyApplications = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [deleteAppId, setDeleteAppId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL;
+
+  const handleDeleteApplication = async () => {
+    if (!deleteAppId) return;
+    setDeleting(true);
+    try {
+      const res = await axios.delete(`${API_URL}/projects/applications/${deleteAppId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      if (res.data.success) {
+        toast.success("Application withdrawn successfully");
+        setApplications(applications.filter(a => a._id !== deleteAppId));
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to withdraw application");
+    } finally {
+      setDeleting(false);
+      setDeleteAppId(null);
+    }
+  };
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -116,13 +142,18 @@ const MyApplications = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filtered = applications.filter(
-    (a) => filter === "all" || a.status === filter,
-  );
+  const filtered = applications.filter((a) => {
+    if (filter === "all") return true;
+    if (filter === "inProgress") return a.status === "accepted" || a.status === "interview_invited";
+    return a.status === filter;
+  });
 
   const counts = {
     all: applications.length,
     pending: applications.filter((a) => a.status === "pending").length,
+    inProgress: applications.filter(
+      (a) => a.status === "accepted" || a.status === "interview_invited",
+    ).length,
     selected: applications.filter((a) => a.status === "selected").length,
     rejected: applications.filter((a) => a.status === "rejected").length,
   };
@@ -130,6 +161,7 @@ const MyApplications = () => {
   const tabs = [
     { key: "all", label: `All (${counts.all})` },
     { key: "pending", label: `Pending (${counts.pending})` },
+    { key: "inProgress", label: `In Progress (${counts.inProgress})` },
     { key: "selected", label: `Selected (${counts.selected})` },
     { key: "rejected", label: `Rejected (${counts.rejected})` },
   ];
@@ -176,6 +208,12 @@ const MyApplications = () => {
                   val: counts.pending,
                   color:
                     "bg-orange-50 text-orange-600 border border-orange-200 shadow-sm",
+                },
+                {
+                  label: "In Progress",
+                  val: counts.inProgress,
+                  color:
+                    "bg-purple-50 text-purple-600 border border-purple-200 shadow-sm",
                 },
                 {
                   label: "Selected",
@@ -291,14 +329,14 @@ const MyApplications = () => {
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                      <Link
-                        to={`/projects/${app.project?._id}`}
-                        className="block bg-white shadow-md rounded-xl p-6 hover:-translate-y-1 transition-all group relative overflow-hidden"
+                      <div
+                        className="block bg-white shadow-md rounded-xl p-6 relative overflow-hidden"
                       >
                         <div
                           className={`absolute top-0 left-0 w-1 h-full ${statusMeta.dotColor}`}
                         ></div>
-                        <div className="flex items-start gap-5 pl-2">
+
+                        <div className="flex items-start gap-5 pl-2 pr-2">
                           {/* Type indicator */}
                           <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl bg-slate-50 border border-slate-200 shrink-0 shadow-sm">
                             {typeMeta.badge}
@@ -307,9 +345,11 @@ const MyApplications = () => {
                           <div className="flex-1 min-w-0">
                             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                               <div>
-                                <h3 className="text-lg font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
-                                  {app.project?.title || "Project"}
-                                </h3>
+                                <Link to={`/projects/${app.project?._id}`} state={{ from: 'dashboard' }}>
+                                  <h3 className="text-lg font-extrabold text-slate-900 hover:text-blue-600 transition-colors truncate">
+                                    {app.project?.title || "Project"}
+                                  </h3>
+                                </Link>
                                 <p className="text-sm font-semibold text-slate-500 mt-1">
                                   Applied for:{" "}
                                   <span className="text-slate-900">
@@ -332,7 +372,10 @@ const MyApplications = () => {
 
                             {/* Host (project creator) avatar + name */}
                             {app.project?.createdBy && (
-                              <div className="flex items-center gap-2 mb-4 bg-slate-50 inline-flex px-3 py-1.5 rounded-lg border border-slate-200">
+                              <Link 
+                                to={`/profile/${app.project.createdBy._id}`}
+                                className="flex items-center gap-2 mb-4 bg-slate-50 inline-flex px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer"
+                              >
                                 {app.project.createdBy.profilePic &&
                                 !app.project.createdBy.profilePic.includes(
                                   "via.placeholder.com",
@@ -350,11 +393,11 @@ const MyApplications = () => {
                                 )}
                                 <span className="text-xs font-semibold text-slate-500">
                                   by{" "}
-                                  <span className="text-slate-900">
+                                  <span className="text-slate-900 font-bold hover:text-blue-600 transition-colors">
                                     {app.project.createdBy.name}
                                   </span>
                                 </span>
-                              </div>
+                              </Link>
                             )}
 
                             <div className="flex items-center gap-3 flex-wrap">
@@ -367,6 +410,44 @@ const MyApplications = () => {
                                 <Calendar className="w-3.5 h-3.5" />
                                 {timeAgo(app.createdAt)}
                               </span>
+
+                              {/* Assessment Score Badge — Color-coded */}
+                              {app.assessmentSubmitted && app.assessmentScore !== undefined && (() => {
+                                const s = app.assessmentScore;
+                                const scoreStyle =
+                                  s >= 80 ? "bg-emerald-50 text-emerald-600 border-emerald-200" :
+                                  s >= 60 ? "bg-blue-50 text-blue-600 border-blue-200" :
+                                  s >= 40 ? "bg-amber-50 text-amber-600 border-amber-200" :
+                                            "bg-rose-50 text-rose-600 border-rose-200";
+                                const scoreLabel =
+                                  s >= 80 ? "Excellent" :
+                                  s >= 60 ? "Good" :
+                                  s >= 40 ? "Average" :
+                                            "Needs Improvement";
+                                return (
+                                  <span className={`text-[11px] font-bold px-2.5 py-1 flex items-center gap-1.5 border rounded-md shadow-sm ${scoreStyle}`}>
+                                    <Trophy className="w-3.5 h-3.5" /> {app.assessmentScore}% — {scoreLabel}
+                                  </span>
+                                );
+                              })()}
+
+                              {/* Interview Badge */}
+                              {app.interviewSubmitted && (
+                                <span className="text-[11px] font-bold px-2.5 py-1 flex items-center gap-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-md shadow-sm">
+                                  <Video className="w-3.5 h-3.5" /> Interview Submitted
+                                </span>
+                              )}
+
+                              {/* Withdraw Button */}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setDeleteAppId(app._id);
+                                }}
+                                className="text-[11px] font-bold px-2.5 py-1 flex items-center gap-1.5 bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-600 hover:text-white rounded-md shadow-sm transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" /> Withdraw
+                              </button>
                             </div>
 
                             {app.coverLetter && (
@@ -380,23 +461,33 @@ const MyApplications = () => {
                               </div>
                             )}
 
-                            {app.interviewSubmitted && (
-                              <div className="mt-4">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 text-xs font-bold rounded-lg border border-emerald-500/20 shadow-sm">
-                                  <CheckCircle2 className="w-4 h-4" /> Interview
-                                  Submitted
-                                </span>
-                              </div>
-                            )}
-                          </div>
 
-                          <div className="shrink-0 pt-2 hidden sm:block">
-                            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors">
-                              <ArrowUpRight className="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors" />
+                            {/* Action Buttons for Assessment and Interview */}
+                            <div className="mt-4 flex gap-3 flex-wrap">
+                              {app.status === "accepted" && !app.assessmentSubmitted && app.assessmentToken && (
+                                <Link
+                                  to={`/assessment?token=${app.assessmentToken}`}
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl shadow-md hover:bg-indigo-700 transition-all hover:-translate-y-0.5"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <PlayCircle className="w-4 h-4" /> Take AI Assessment
+                                </Link>
+                              )}
+                              
+                              {app.status === "interview_invited" && !app.interviewSubmitted && (
+                                <Link
+                                  to={`/interview/${app._id}`}
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-bold rounded-xl shadow-md hover:bg-purple-700 transition-all hover:-translate-y-0.5"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Video className="w-4 h-4" /> Take Video Interview
+                                </Link>
+                              )}
                             </div>
                           </div>
+
                         </div>
-                      </Link>
+                      </div>
                     </motion.div>
                   );
                 })}
@@ -405,6 +496,51 @@ const MyApplications = () => {
           )}
         </div>
       </div>
+
+      {/* Withdraw Confirmation Modal */}
+      <AnimatePresence>
+        {deleteAppId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white border border-slate-200 shadow-2xl rounded-2xl p-6 max-w-sm w-full mx-4 text-center"
+            >
+              <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-black text-slate-900 mb-2">Withdraw Application?</h3>
+              <p className="text-sm font-semibold text-slate-500 mb-6">
+                This will permanently withdraw your application. You will be able to apply again from scratch.
+              </p>
+              <div className="flex items-center gap-3 w-full">
+                <button
+                  onClick={() => setDeleteAppId(null)}
+                  disabled={deleting}
+                  className="flex-1 py-2.5 px-4 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteApplication}
+                  disabled={deleting}
+                  className="flex-1 py-2.5 px-4 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-colors shadow-sm disabled:opacity-50 flex justify-center items-center gap-2"
+                >
+                  {deleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Yes, Withdraw
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </Layout>
   );
 };

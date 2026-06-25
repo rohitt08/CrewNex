@@ -35,7 +35,7 @@ const ForgotPassword = () => {
         {/* Background elements */}
         
 
-        <div className="max-w-md w-full bg-white border border-slate-200 rounded-xl p-8 sm:p-10 shadow-lg relative z-10 animate-fade-in-up">
+        <div className="max-w-md w-full bg-white border border-slate-200 rounded-xl p-6 sm:p-10 shadow-lg relative z-10 animate-fade-in-up">
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
               <Mail className="w-10 h-10 text-indigo-600" />

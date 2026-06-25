@@ -29,6 +29,8 @@ import {
   Activity,
   Upload,
   ExternalLink,
+  ChevronDown,
+  IndianRupee,
 } from "lucide-react";
 import PageLoader from "../../Components/Loading/PageLoader";
 
@@ -62,6 +64,8 @@ const Profile = () => {
     hourlyRate: 0,
   });
 
+  const [openDropdown, setOpenDropdown] = useState(null); // 'experience' | 'availability' | null
+
   const API_URL = import.meta.env.VITE_API_URL;
   const BASE_URL = API_URL.replace("/api", "");
 
@@ -77,6 +81,21 @@ const Profile = () => {
     } catch (e) {
       console.error(e);
       return dateString;
+    }
+  };
+
+  const getResumeName = (url) => {
+    if (!url) return "";
+    try {
+      const parts = url.split('/');
+      let filename = parts.pop();
+      // Cloudinary format is often Date.now()-filename
+      if (/^\d{13}-/.test(filename)) {
+        filename = filename.substring(14);
+      }
+      return decodeURIComponent(filename);
+    } catch (e) {
+      return "Uploaded_Resume.pdf";
     }
   };
 
@@ -251,6 +270,13 @@ const Profile = () => {
   const handleResumeChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        return toast.error("File size must be 5MB or less.");
+      }
+      const validTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+      if (!validTypes.includes(file.type)) {
+        return toast.error("Invalid file format. Only PDF, DOC, and DOCX are allowed.");
+      }
       setResumeFile(file);
       await updateResumeFile(file);
     }
@@ -532,15 +558,406 @@ const Profile = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left Column */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Skills (Seekers only) */}
-              {user.role !== "creator" && (
-                <motion.div
+              {/* Skills */}
+              <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1, type: "spring", stiffness: 100 }}
-                  className="bg-white border border-slate-200 shadow-sm rounded-2xl p-8"
+                  className="bg-white border border-slate-200 shadow-sm rounded-2xl p-5 sm:p-8"
                 >
                   <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-apple-blue/10 flex items-center justify-center border border-apple-blue/20 shadow-sm">
+                      <Activity className="w-5 h-5 text-apple-blue" />
+                    </div>
+                    Skills & Expertise
+                  </h3>
+
+                  <div className="flex flex-wrap gap-3">
+                    <AnimatePresence>
+                      {user.skills?.map((skill, i) => (
+                        <motion.span
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          key={i}
+                          className="px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-bold flex items-center gap-2 shadow-sm"
+                        >
+                          {skill}
+                          {isEditing && (
+                            <button
+                              onClick={() => handleRemoveSkill(skill)}
+                              className="hover:text-red-500 transition-colors ml-1"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                        </motion.span>
+                      ))}
+                    </AnimatePresence>
+                    {!isEditing &&
+                      (!user.skills || user.skills.length === 0) && (
+                        <div className="w-full p-6 border-2 border-dashed border-slate-200 rounded-2xl text-center text-slate-500 font-sans font-semibold text-sm">
+                          No skills added yet.
+                        </div>
+                      )}
+                  </div>
+
+                  {isEditing && (
+                    <div className="flex flex-col sm:flex-row items-center gap-3 mt-6 bg-slate-50 p-2 rounded-2xl border border-slate-200">
+                      <input
+                        type="text"
+                        value={newSkill}
+                        onChange={(e) => setNewSkill(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder="Type a skill and press enter..."
+                        className="flex-1 bg-transparent border-none px-4 py-2 focus:outline-none text-slate-900 text-sm font-semibold w-full placeholder-slate-400"
+                      />
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleAddSkill}
+                        disabled={!newSkill.trim()}
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-apple-blue/10 text-apple-blue border border-apple-blue/20 rounded-xl hover:bg-apple-blue/20 transition-all disabled:opacity-50 font-bold text-sm shadow-sm"
+                      >
+                        <Plus className="w-4 h-4" /> Add
+                      </motion.button>
+                    </div>
+                  )}
+                </motion.div>
+
+              {/* Professional Details */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+                className="bg-white border border-slate-200 shadow-sm rounded-2xl p-5 sm:p-8"
+              >
+                <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100 shadow-sm">
+                    <Briefcase className="w-5 h-5 text-blue-500" />
+                  </div>
+                  Professional Info
+                </h3>
+
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {/* Experience */}
+                  <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
+                    <span className="flex items-center gap-2 text-xs font-bold text-slate-500 font-sans uppercase tracking-widest mb-3">
+                      <Star className="w-4 h-4 text-amber-500" /> Experience
+                    </span>
+                    {isEditing ? (
+                      <div className="relative">
+                        <div
+                          onClick={() => setOpenDropdown(openDropdown === 'experience' ? null : 'experience')}
+                          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white text-slate-900 text-sm font-bold cursor-pointer flex justify-between items-center shadow-sm hover:border-apple-blue/50 transition-colors"
+                        >
+                          {user.experience || "Beginner"}
+                          <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${openDropdown === 'experience' ? 'rotate-180' : ''}`} />
+                        </div>
+                        
+                        <AnimatePresence>
+                          {openDropdown === 'experience' && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 shadow-lg rounded-xl overflow-hidden z-50"
+                            >
+                              {["Beginner", "Intermediate", "Expert"].map((opt) => (
+                                <div
+                                  key={opt}
+                                  onClick={() => {
+                                    handleInputChange({ target: { name: 'experience', value: opt } });
+                                    setOpenDropdown(null);
+                                  }}
+                                  className={`px-4 py-3 text-sm font-bold cursor-pointer transition-colors ${user.experience === opt ? 'bg-apple-blue/10 text-apple-blue' : 'text-slate-700 hover:bg-slate-50'}`}
+                                >
+                                  {opt}
+                                </div>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <p className="font-bold text-slate-900 text-lg">
+                        {user.experience || "Beginner"}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Availability */}
+                  <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
+                    <span className="flex items-center gap-2 text-xs font-bold text-slate-500 font-sans uppercase tracking-widest mb-3">
+                      <Clock className="w-4 h-4 text-emerald-500" />{" "}
+                      Availability
+                    </span>
+                    {isEditing ? (
+                      <div className="relative">
+                        <div
+                          onClick={() => setOpenDropdown(openDropdown === 'availability' ? null : 'availability')}
+                          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white text-slate-900 text-sm font-bold cursor-pointer flex justify-between items-center shadow-sm hover:border-apple-blue/50 transition-colors"
+                        >
+                          {user.availability || "Available"}
+                          <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${openDropdown === 'availability' ? 'rotate-180' : ''}`} />
+                        </div>
+                        
+                        <AnimatePresence>
+                          {openDropdown === 'availability' && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 shadow-lg rounded-xl overflow-hidden z-50"
+                            >
+                              {[
+                                { label: "Available", color: "bg-emerald-500" },
+                                { label: "Busy", color: "bg-amber-500" },
+                                { label: "Looking for Team", color: "bg-blue-500" },
+                                { label: "Not Available", color: "bg-slate-300" }
+                              ].map((opt) => (
+                                <div
+                                  key={opt.label}
+                                  onClick={() => {
+                                    handleInputChange({ target: { name: 'availability', value: opt.label } });
+                                    setOpenDropdown(null);
+                                  }}
+                                  className={`px-4 py-3 text-sm font-bold cursor-pointer transition-colors flex items-center gap-3 ${user.availability === opt.label ? 'bg-apple-blue/10 text-apple-blue' : 'text-slate-700 hover:bg-slate-50'}`}
+                                >
+                                  <span className={`w-2.5 h-2.5 rounded-full shadow-sm ${opt.color}`}></span>
+                                  {opt.label}
+                                </div>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2.5">
+                        <span
+                          className={`w-3 h-3 rounded-full border border-slate-200 shadow-sm ${user.availability === "Available" ? "bg-emerald-500" : user.availability === "Busy" ? "bg-amber-500" : user.availability === "Looking for Team" ? "bg-blue-500" : "bg-slate-300"}`}
+                        ></span>
+                        <p className="font-bold text-slate-900 text-lg">
+                          {user.availability || "Available"}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Hourly Rate */}
+                  <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
+                    <span className="flex items-center gap-2 text-xs font-bold text-slate-500 font-sans uppercase tracking-widest mb-3">
+                      <IndianRupee className="w-4 h-4 text-emerald-500" /> Hourly
+                      Rate
+                    </span>
+                    {isEditing ? (
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">
+                          ₹
+                        </span>
+                        <input
+                          type="number"
+                          name="hourlyRate"
+                          value={user.hourlyRate || 0}
+                          onChange={handleInputChange}
+                          className="w-full pl-8 pr-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-apple-blue bg-white text-slate-900 text-sm font-bold"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-baseline gap-1">
+                        <p className="font-bold text-slate-900 text-2xl">
+                          ₹{user.hourlyRate || 0}
+                        </p>
+                        <span className="text-slate-500 font-sans text-sm font-bold">
+                          /hr
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Resume */}
+              <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 100 }}
+                  className="bg-white border border-slate-200 shadow-sm rounded-2xl p-5 sm:p-8"
+                >
+                  <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center border border-red-100 shadow-sm">
+                      <FileText className="w-5 h-5 text-red-500" />
+                    </div>
+                    Resume / CV
+                  </h3>
+
+                  <div className="border-2 border-dashed border-slate-200 rounded-3xl p-5 sm:p-8 text-center bg-slate-50">
+                    {resumeFile || user.resume ? (
+                      <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm max-w-md mx-auto text-left">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 text-center sm:text-left">
+                          <div className="w-14 h-14 bg-red-50 border border-red-100 rounded-xl flex items-center justify-center text-red-500 shrink-0">
+                            {isUploadingResume ? (
+                              <Loader2 className="w-6 h-6 animate-spin" />
+                            ) : (
+                              <FileText className="w-6 h-6" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-bold text-slate-900 truncate text-lg">
+                              {resumeFile
+                                ? resumeFile.name
+                                : user.resume
+                                  ? getResumeName(user.resume)
+                                  : ""}
+                            </p>
+                            <p className="text-sm font-semibold text-slate-500 mt-0.5">
+                              {isUploadingResume
+                                ? "Uploading..."
+                                : "Ready to view"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-6 border-t border-slate-200">
+                          <a
+                            href={`https://docs.google.com/viewer?url=${encodeURIComponent(user.resume)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 py-3 bg-apple-blue/10 text-apple-blue hover:bg-apple-blue/20 border border-apple-blue/20 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-sm"
+                          >
+                            <ExternalLink className="w-4 h-4" /> View
+                          </a>
+                          {!isReadOnly && (
+                            <label
+                              className={`flex-1 py-3 bg-slate-50 text-slate-900 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-sm cursor-pointer shadow-sm ${isUploadingResume ? "opacity-50 pointer-events-none" : ""}`}
+                            >
+                              <Upload className="w-4 h-4" /> Replace
+                              <input
+                                type="file"
+                                className="hidden"
+                                accept=".pdf,.doc,.docx"
+                                onChange={handleResumeChange}
+                                disabled={isUploadingResume}
+                              />
+                            </label>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-4 py-6">
+                        {isReadOnly ? (
+                          <>
+                            <div className="w-20 h-20 bg-slate-50 border border-slate-200 text-slate-400 rounded-2xl flex items-center justify-center mb-2 shadow-sm">
+                              <FileText className="w-10 h-10" />
+                            </div>
+                            <h4 className="text-slate-900 font-bold text-xl">
+                              No resume uploaded
+                            </h4>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-20 h-20 bg-apple-blue/10 border border-apple-blue/20 text-apple-blue rounded-2xl flex items-center justify-center mb-2 shadow-sm">
+                              <Upload className="w-10 h-10" />
+                            </div>
+                            <h4 className="text-slate-900 font-bold text-xl">
+                              Upload your resume
+                            </h4>
+                            <p className="text-sm font-semibold text-slate-500 mb-4">
+                              Supported formats: PDF, DOCX (Max: 5MB)
+                            </p>
+                            <label
+                              className={`cursor-pointer bg-slate-50 text-slate-900 hover:bg-slate-100 border border-slate-200 px-8 py-3.5 rounded-xl font-bold transition-all shadow-sm inline-flex items-center gap-2 ${isUploadingResume ? "opacity-50 pointer-events-none" : "hover:-translate-y-0.5"}`}
+                            >
+                              {isUploadingResume ? (
+                                <>
+                                  <Loader2 className="w-5 h-5 animate-spin" />{" "}
+                                  Uploading...
+                                </>
+                              ) : (
+                                <>
+                                  <Upload className="w-5 h-5" /> Browse Files
+                                </>
+                              )}
+                              <input
+                                type="file"
+                                className="hidden"
+                                accept=".pdf,.doc,.docx"
+                                onChange={handleResumeChange}
+                                disabled={isUploadingResume}
+                              />
+                            </label>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-8">
+              {/* Analytics */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4, type: "spring", stiffness: 100 }}
+                className="bg-white border border-slate-200 shadow-sm rounded-2xl p-5 sm:p-8 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-apple-blue/10 rounded-full blur-[40px] transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/10 rounded-full blur-[40px] transform -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+
+                <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 relative z-10">
+                  <Activity className="w-5 h-5 text-apple-blue" /> Platform
+                  Stats
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <Folder className="w-6 h-6 text-apple-blue mb-3" />
+                    <p className="text-3xl font-black text-slate-900">
+                      {user.stats?.applications || 0}
+                    </p>
+                    <p className="text-apple-blue/80 text-xs font-bold uppercase tracking-widest mt-1">
+                      {user.role === 'creator' ? 'Applicants' : 'Applied'}
+                    </p>
+                  </div>
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <Users className="w-6 h-6 text-purple-500 mb-3" />
+                    <p className="text-3xl font-black text-slate-900">
+                      {user.stats?.teamsJoined || 0}
+                    </p>
+                    <p className="text-purple-500/80 text-xs font-bold uppercase tracking-widest mt-1">
+                      {user.role === 'creator' ? 'Teams Built' : 'Teams'}
+                    </p>
+                  </div>
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <Briefcase className="w-6 h-6 text-emerald-500 mb-3" />
+                    <p className="text-3xl font-black text-slate-900">
+                      {user.stats?.projectsCreated || 0}
+                    </p>
+                    <p className="text-emerald-500/80 text-xs font-bold uppercase tracking-widest mt-1">
+                      Projects
+                    </p>
+                  </div>
+                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-sm">
+                    <Star className="w-6 h-6 text-amber-500 mb-3" />
+                    <p className="text-3xl font-black text-amber-500">
+                      {user.stats?.rating || "0.0"}
+                    </p>
+                    <p className="text-amber-500/80 text-xs font-bold uppercase tracking-widest mt-1">
+                      Rating
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Web Presence */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
+                className="bg-white border border-slate-200 shadow-sm rounded-2xl p-5 sm:p-8"
+              >
+                <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center border border-teal-100 shadow-sm">
                     <Globe className="w-5 h-5 text-teal-600" />
                   </div>
@@ -671,7 +1088,7 @@ const Profile = () => {
                         (!user.social.github &&
                           !user.social.linkedin &&
                           !user.social.portfolio)) && (
-                        <div className="p-8 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
+                        <div className="p-5 sm:p-8 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
                           <Globe className="w-10 h-10 text-slate-900/60 mb-3" />
                           <p className="text-slate-500 font-sans text-sm font-bold">
                             No links connected
@@ -682,7 +1099,6 @@ const Profile = () => {
                   )}
                 </div>
               </motion.div>
-              )}
             </div>
           </div>
         </div>
