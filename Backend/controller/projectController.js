@@ -80,8 +80,13 @@ const getAllProjects = async (req, res) => {
     const filter = {};
 
     if (type && type !== "all") filter.type = type;
-    if (status) filter.status = status;
-    else filter.status = "open";
+    if (status === "all") {
+      // fetch all statuses, do not filter by status
+    } else if (status) {
+      filter.status = status;
+    } else {
+      filter.status = "open";
+    }
 
     if (search) {
       filter.$or = [
@@ -124,24 +129,43 @@ const getProjectById = async (req, res) => {
         .json({ success: false, message: "Project not found" });
     }
 
-    const applicantCount = await Application.countDocuments({
-      project: project._id,
+    const applications = await Application.find({ project: project._id });
+    const applicantCount = applications.length;
+
+    // Self-healing logic for membersFilled
+    const selectedApps = applications.filter((a) => a.status === "selected");
+    const trueMembersFilled = selectedApps.length;
+    let needsSave = false;
+
+    if (project.membersFilled !== trueMembersFilled) {
+      project.membersFilled = trueMembersFilled;
+      needsSave = true;
+    }
+
+    project.roles.forEach((role) => {
+      const roleSelected = selectedApps.filter((a) => a.roleName === role.roleName).length;
+      if (role.membersFilled !== roleSelected) {
+        role.membersFilled = roleSelected;
+        needsSave = true;
+      }
     });
 
-    let hasApplied = false;
-    let applicationStatus = null;
+    if (needsSave) {
+      await project.save();
+    }
+
+    let appliedRoles = [];
+    let canChat = false;
     if (req.userId) {
-      const existing = await Application.findOne({
+      const existingApps = await Application.find({
         project: project._id,
         applicant: req.userId,
       });
-      if (existing) {
-        hasApplied = true;
-        applicationStatus = existing.status;
-      }
+      appliedRoles = existingApps.map(a => a.roleName);
+      canChat = existingApps.some(a => ["accepted", "selected"].includes(a.status));
     }
 
-    res.json({ success: true, project: { ...project.toObject(), applicantCount, hasApplied, applicationStatus } });
+    res.json({ success: true, project: { ...project.toObject(), applicantCount, appliedRoles, canChat } });
   } catch (error) {
     console.error("Get project error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -288,10 +312,33 @@ const getMyProjects = async (req, res) => {
 
     const projectsWithCounts = await Promise.all(
       projects.map(async (p) => {
-        const count = await Application.countDocuments({ project: p._id });
         const applications = await Application.find({ project: p._id })
           .populate("applicant", "name email profilePic skills experience")
           .sort({ createdAt: -1 });
+        const count = applications.length;
+
+        // Self-healing logic for membersFilled
+        const selectedApps = applications.filter((a) => a.status === "selected");
+        const trueMembersFilled = selectedApps.length;
+        let needsSave = false;
+
+        if (p.membersFilled !== trueMembersFilled) {
+          p.membersFilled = trueMembersFilled;
+          needsSave = true;
+        }
+
+        p.roles.forEach((role) => {
+          const roleSelected = selectedApps.filter((a) => a.roleName === role.roleName).length;
+          if (role.membersFilled !== roleSelected) {
+            role.membersFilled = roleSelected;
+            needsSave = true;
+          }
+        });
+
+        if (needsSave) {
+          await p.save();
+        }
+
         return { ...p.toObject(), applicantCount: count, applications };
       })
     );
@@ -337,19 +384,6 @@ const updateApplicationStatus = async (req, res) => {
 
     application.status = status;
     await application.save();
-
-    // If accepted, increment project and role filled counts
-    if (status === "accepted") {
-      await Project.updateOne(
-        { _id: application.project._id, "roles.roleName": application.roleName },
-        {
-          $inc: {
-            membersFilled: 1,
-            "roles.$.membersFilled": 1,
-          },
-        }
-      );
-    }
 
     // Send email notification for accepted/rejected status
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
@@ -479,7 +513,8 @@ const generateAssessmentQuestions = async (req, res) => {
     }
 
     const application = await Application.findById(decoded.applicationId)
-      .populate("project", "title roles");
+      .populate("project", "title roles")
+      .populate("applicant", "skills");
 
     if (!application) {
       return res.status(404).json({ success: false, message: "Application not found" });
@@ -493,10 +528,12 @@ const generateAssessmentQuestions = async (req, res) => {
       (r) => r.roleName === application.roleName
     );
     const skillsRequired = role?.skillsRequired || [];
+    const applicantSkills = application.applicant?.skills || [];
 
     const questions = await generateAssessment({
       roleName: application.roleName,
       skills: skillsRequired,
+      applicantSkills,
       projectTitle: application.project.title,
     });
 
@@ -504,8 +541,9 @@ const generateAssessmentQuestions = async (req, res) => {
     const sanitizedQuestions = questions.map(({ correct, ...rest }) => rest);
 
     // Store hashed answers server-side on the application
-    application.assessmentAnswers = questions.map((q) => q.correct);
-    await application.save();
+    await Application.findByIdAndUpdate(application._id, {
+      assessmentAnswers: questions.map((q) => q.correct)
+    });
 
     res.json({ success: true, questions: sanitizedQuestions });
   } catch (error) {
@@ -723,7 +761,7 @@ const selectCandidate = async (req, res) => {
     const { applicationId } = req.params;
     const application = await Application.findById(applicationId)
       .populate("applicant", "name email")
-      .populate("project", "createdBy title roles");
+      .populate("project");
 
     if (!application) {
       return res.status(404).json({ success: false, message: "Application not found" });
@@ -733,19 +771,36 @@ const selectCandidate = async (req, res) => {
       return res.status(403).json({ success: false, message: "Not authorized" });
     }
 
+    if (application.status === "selected") {
+      return res.status(400).json({ success: false, message: "Candidate is already selected" });
+    }
+
+    const project = await Project.findById(application.project._id);
+    const role = project.roles.find((r) => r.roleName === application.roleName);
+
+    if (!role) {
+      return res.status(404).json({ success: false, message: "Role not found in project" });
+    }
+
+    if (role.membersFilled >= role.membersNeeded) {
+      return res.status(400).json({ success: false, message: `The role '${role.roleName}' is already full` });
+    }
+
     application.status = "selected";
     await application.save();
 
-    // Increment project membersFilled
-    await Project.findByIdAndUpdate(application.project._id, {
-      $inc: { membersFilled: 1 }
-    });
+    // Update project members count
+    project.membersFilled += 1;
+    role.membersFilled += 1;
 
-    // Also increment membersFilled in the exact role
-    await Project.updateOne(
-      { _id: application.project._id, "roles.roleName": application.roleName },
-      { $inc: { "roles.$.membersFilled": 1 } }
-    );
+    // Auto-close project if all members are filled
+    let autoClosed = false;
+    if (project.membersFilled >= project.totalMembers) {
+      project.status = "closed";
+      autoClosed = true;
+    }
+
+    await project.save();
 
     const { sendSelectionEmail } = require("../utils/emailer");
     sendSelectionEmail({
@@ -755,10 +810,49 @@ const selectCandidate = async (req, res) => {
       roleName: application.roleName,
     });
 
-    res.json({ success: true, message: "Candidate selected successfully" });
+    res.json({ 
+      success: true, 
+      message: autoClosed ? "Candidate selected successfully. Project is now full and closed." : "Candidate selected successfully" 
+    });
   } catch (error) {
     console.error("Select Candidate Error:", error);
     res.status(500).json({ success: false, message: "Failed to select candidate" });
+  }
+};
+
+const getInterviewQuestions = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const application = await Application.findById(applicationId)
+      .populate("project", "title roles");
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: "Application not found" });
+    }
+
+    if (application.applicant.toString() !== req.userId) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    // Check if questions were already generated
+    if (application.interviewQuestions && application.interviewQuestions.length === 20) {
+      return res.json({ success: true, questions: application.interviewQuestions });
+    }
+
+    // Otherwise, generate them
+    const generateInterviewQuestions = require("../utils/generateInterviewQuestions");
+    const questions = await generateInterviewQuestions({
+      roleName: application.roleName,
+      projectTitle: application.project.title,
+    });
+
+    application.interviewQuestions = questions;
+    await application.save();
+
+    res.json({ success: true, questions });
+  } catch (error) {
+    console.error("Get Interview Questions Error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch interview questions" });
   }
 };
 
@@ -875,6 +969,68 @@ const updateProject = async (req, res) => {
   }
 };
 
+const deleteProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ success: false, message: "Project not found" });
+
+    if (req.user.role !== "admin" && project.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    await Application.deleteMany({ project: project._id });
+    await Project.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, message: "Project deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const toggleProjectStatus = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ success: false, message: "Project not found" });
+
+    if (project.createdBy.toString() !== req.userId) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    project.status = project.status === "open" ? "closed" : "open";
+    await project.save();
+
+    res.json({ success: true, message: `Project is now ${project.status}`, status: project.status });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ─── Delete Application ──────────────────────────────────────────────────────
+const deleteApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+
+    const application = await Application.findById(applicationId).populate("project", "createdBy");
+    if (!application) {
+      return res.status(404).json({ success: false, message: "Application not found" });
+    }
+
+    // Ensure the requester is the project creator or the applicant
+    const isCreator = application.project.createdBy._id.toString() === req.userId;
+    const isApplicant = application.applicant.toString() === req.userId;
+
+    if (!isCreator && !isApplicant) {
+      return res.status(403).json({ success: false, message: "Only the creator or the applicant can remove applications." });
+    }
+
+    await Application.findByIdAndDelete(applicationId);
+
+    res.json({ success: true, message: "Application removed successfully" });
+  } catch (error) {
+    console.error("Delete application error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   createProject,
   updateProject,
@@ -890,6 +1046,10 @@ module.exports = {
   generateAssessmentQuestions,
   submitAssessment,
   inviteToInterview,
+  getInterviewQuestions,
   selectCandidate,
   submitInterview,
+  deleteProject,
+  toggleProjectStatus,
+  deleteApplication,
 };

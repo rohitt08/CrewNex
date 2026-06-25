@@ -1,8 +1,10 @@
 const User = require("../models/userModel");
 
+const Application = require("../models/applicationModel");
+const Project = require("../models/projectModel");
+
 const getProfile = async (req, res) => {
   try {
-    // console.log(req.userId);
     const user = await User.findById(req.userId).select("-password");
 
     if (!user) {
@@ -11,6 +13,38 @@ const getProfile = async (req, res) => {
         message: "User not found",
       });
     }
+
+    // Dynamically calculate stats based on role
+    let applicationsCount = 0;
+    if (user.role === 'creator') {
+        const userProjects = await Project.find({ createdBy: user._id }).select('_id');
+        const projectIds = userProjects.map(p => p._id);
+        applicationsCount = await Application.countDocuments({ project: { $in: projectIds } });
+    } else {
+        applicationsCount = await Application.countDocuments({ applicant: user._id });
+    }
+
+    let teamsCount = 0;
+    if (user.role === 'creator') {
+        teamsCount = await Project.countDocuments({
+            createdBy: user._id,
+            $or: [
+                { status: { $in: ['closed', 'completed'] } },
+                { $expr: { $gte: ["$membersFilled", "$totalMembers"] } }
+            ]
+        });
+    } else {
+        teamsCount = await Application.countDocuments({ applicant: user._id, status: "selected" });
+    }
+
+    const projectsCreated = await Project.countDocuments({ createdBy: user._id });
+
+    const stats = {
+      applications: applicationsCount,
+      teamsJoined: teamsCount,
+      projectsCreated: projectsCreated,
+      successRate: user.stats?.successRate || 0,
+    };
 
     res.json({
       success: true,
@@ -27,7 +61,7 @@ const getProfile = async (req, res) => {
         bio: user.bio,
         skills: user.skills,
         social: user.social,
-        stats: user.stats,
+        stats: stats,
         experience: user.experience,
         availability: user.availability,
         hourlyRate: user.hourlyRate,
@@ -58,6 +92,37 @@ const getProfileById = async (req, res) => {
       });
     }
 
+    let applicationsCount = 0;
+    if (user.role === 'creator') {
+        const userProjects = await Project.find({ createdBy: user._id }).select('_id');
+        const projectIds = userProjects.map(p => p._id);
+        applicationsCount = await Application.countDocuments({ project: { $in: projectIds } });
+    } else {
+        applicationsCount = await Application.countDocuments({ applicant: user._id });
+    }
+
+    let teamsCount = 0;
+    if (user.role === 'creator') {
+        teamsCount = await Project.countDocuments({
+            createdBy: user._id,
+            $or: [
+                { status: { $in: ['closed', 'completed'] } },
+                { $expr: { $gte: ["$membersFilled", "$totalMembers"] } }
+            ]
+        });
+    } else {
+        teamsCount = await Application.countDocuments({ applicant: user._id, status: "selected" });
+    }
+
+    const projectsCreated = await Project.countDocuments({ createdBy: user._id });
+
+    const stats = {
+      applications: applicationsCount,
+      teamsJoined: teamsCount,
+      projectsCreated: projectsCreated,
+      successRate: user.stats?.successRate || 0,
+    };
+
     res.json({
       success: true,
       user: {
@@ -73,7 +138,7 @@ const getProfileById = async (req, res) => {
         bio: user.bio,
         skills: user.skills,
         social: user.social,
-        stats: user.stats,
+        stats: stats,
         experience: user.experience,
         availability: user.availability,
         hourlyRate: user.hourlyRate,
